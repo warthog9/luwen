@@ -23,29 +23,7 @@ export DH_VERBOSE=3
 		--with=python3 \
 		--buildsystem=pybuild \
 		--sourcedirectory=crates/pyluwen
-	#python3 -m venv venv && \
-	#	. ./venv/bin/activate && \
-	#	mkdir -p built && \
-	#	pip install --upgrade pip && \
-	#	pip install --upgrade maturin && \
-	#	cd crates/pyluwen && \
-	#	pip install --target ../../built/ . && \
-	#	deactivate
-	#	pip install git+https://salsa.debian.org/python-team/tools/dh-python.git & \
-	#	which pybuild \
-	#	dh $@ \
-	#		--parallel \
-	#		--with=python3 \
-	#		--buildsystem=pybuild \
-	#		--sourcedirectory=crates/pyluwen && \
-	#	deactivate
-	#cd crates/pyluwen && \
-		#pip wheel . && 
 	echo "Done Stage 1"
-
-#override_dh_auto_install:
-#	./venv/bin/activate && \
-#	pip install --target debian/
 
 execute_after_dh_auto_clean:
 	rm -rf debian/cargo_registry

@@ -1,0 +1,91 @@
+name: Build Release debian package - Manual Trigger
+run-name: Build Release debian package - Manual Trigger
+on:
+  workflow_dispatch:
+  push:
+    tags: [ 'v*' ]
+
+jobs:
+  builddeb2204:
+    runs-on: ubuntu-22.04
+    steps:
+      - run: sudo apt update
+      - run: |
+          sudo apt install -y \
+            build-essential \
+            cargo \
+            debhelper \
+            dh-python \
+            dh-sequence-python3 \
+            git-buildpackage \
+            gnupg \
+            libpython3-all-dev \
+            pybuild-plugin-pyproject \
+            python3-pip
+      #- run: which base64
+      #- run: echo ${GPG_KEY_RELEASE} | base64 --decode | gpg --batch --import
+      #  env:
+      #    GPG_KEY_RELEASE: ${{ secrets.GPG_KEY_RELEASE }}
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: $${{ secrets.GPG_KEY_RELEASE }}
+      - run: gpg -K
+      - run: sudo pip install --upgrade pip && sudo pip install maturin
+      - run: sudo ln -s /usr/local/bin/maturin /usr/bin/
+      - uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+          fetch-depth: 0
+      - run: git tag
+      - run: ls -lah
+      - run: if [[ "main" = "${{ github.ref_name }}" ]]; then git checkout -b master main;fi
+        #- run: gbp buildpackage --git-ignore-branch 
+        # Setup for building on Ubuntu
+      - run: ln -s debian.ubuntu debian
+      - run: ls -lah debian/changelog
+      - run: cat debian/changelog
+      # Ok because we don't have a vendored build we sorta kinda NEED a vendored build
+      - run: cargo vendor
+      - run: ls -lah
+      - run: mkdir .cargo && cp debian.ubuntu/cargo.toml-vendored .cargo/config.toml
+      - run: pwd
+      - run: ( cd crates/pyluwen && cargo vendor && cd ../../ )
+      - run: pwd
+      - run: ls -lah
+      - run: mkdir crates/pyluwen/.cargo && cp debian.ubuntu/cargo.toml-vendored crates/pyluwen/.cargo/config.toml
+      - run: |
+          gbp buildpackage \
+            --git-ignore-new
+            #--git-upstream-tag='v%(version)s'
+            # --git-tag
+        continue-on-error: true
+      - name: Move Debian packages
+        run: mkdir -p artifacts && mv ../*.deb artifacts/
+      - name: Set environment variable for deb filename
+        id: deb_filename
+        run: echo "DEB_FILENAME=$(basename artifacts/*.deb)" >> $GITHUB_ENV
+      - name: Upload Debian package
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.DEB_FILENAME }}
+          path: artifacts/*.deb
+      - name: release
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          draft: false
+          prerelease: false
+          release_name: ${{ github.ref_name }}
+          tag_name: ${{ github.ref }}
+          #body_path: CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - name: Push Git Tag
+        run: |
+          git push origin --tags
+      - name: upload debian package
+        run: gh release upload ${{ github.ref_name }} ../*.deb
+        env:
+          GITHUB_TOKEN: ${{ github.TOKEN }}
+
