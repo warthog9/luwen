@@ -1,0 +1,115 @@
+name: Build Release debian package - Manual Trigger
+run-name: Build Release debian package - Manual Trigger
+on:
+  workflow_dispatch:
+  push:
+    tags: [ 'v*' ]
+
+jobs:
+  builddeb2204:
+    runs-on: ubuntu-22.04
+    steps:
+      - run: sudo apt update
+      - run: |
+          sudo apt install -y \
+            build-essential \
+            cargo \
+            debhelper \
+            dh-python \
+            dh-sequence-python3 \
+            git-buildpackage \
+            gnupg \
+            libpython3-all-dev \
+            pybuild-plugin-pyproject \
+            python3-pip
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: $${{ secrets.GPG_KEY_RELEASE }}
+      - run: sudo pip install --upgrade pip && sudo pip install maturin
+      - run: sudo ln -s /usr/local/bin/maturin /usr/bin/
+      - uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+          fetch-depth: 0
+      - run: git tag
+      - run: ls -lah
+      - run: |
+          if [[ "main" = "${{ github.ref_name }}" ]]; \
+          then \
+            git checkout -b master main;\
+          fi
+      # Setup for building on Ubuntu
+      #   Ubuntu requires the package itself to be vendored as opposed to using system
+      #   packages.  We need to create a vendored tree and then stash it with the build
+      - run: cargo vendor
+      - run: |
+          mkdir .cargo \
+          && \
+          cp \
+            debian.ubuntu/cargo.toml-vendored \
+            .cargo/config.toml
+      - run: |
+          ( \
+            cd crates/pyluwen \
+            && \
+            cargo vendor \
+            && \
+            cd ../../ \
+          )
+      - run: |
+          mkdir crates/pyluwen/.cargo \
+          && \
+          cp \
+            debian.ubuntu/cargo.toml-vendored \
+            crates/pyluwen/.cargo/config.toml
+      # Ok this needs to get up leveled somewhere so that it can be shared across Debian and Ubuntu obviously
+      - run: |
+          gbp dch \
+            --debian-branch ${{ github.ref_name }} \
+            -R \
+            -N %(version) \
+            --commit \
+            --commit-msg="Generating Debian Changelog for %(version)"
+        env:
+          EMAIL: releases@tenstorrent.com
+          NAME: Tenstorrent Releases
+      - run: |
+          gbp buildpackage \
+            --git-ignore-new
+            #--git-upstream-tag='v%(version)s'
+            # --git-tag
+        continue-on-error: true
+      - name: Stash the vendor directory for artifacting as well
+        run: tar -czvf artifacts/vendor.tar.gz vendor
+      - name: Move Debian packages
+        run: mkdir -p artifacts && mv ../*.deb artifacts/
+      - name: Temporarily copy the changelog over
+        run: cp debian/changelog artifacts/
+      - name: Set environment variable for deb filename
+        id: deb_filename
+        run: echo "DEB_FILENAME=$(basename artifacts/*.deb)" >> $GITHUB_ENV
+      - name: Upload Debian package
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.DEB_FILENAME }}
+          path: artifacts/*.deb
+      - name: release
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          draft: false
+          prerelease: false
+          release_name: ${{ github.ref_name }}
+          tag_name: ${{ github.ref }}
+          #body_path: CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - name: Push Git Tag
+        run: |
+          git push origin --tags
+      - name: upload debian package
+        run: gh release upload ${{ github.ref_name }} ../*.deb
+        env:
+          GITHUB_TOKEN: ${{ github.TOKEN }}
+
