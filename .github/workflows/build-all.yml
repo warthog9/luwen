@@ -1,0 +1,20 @@
+name: Build All
+run-name: Build All
+on:
+  workflow_dispatch:
+  workflow_call:
+
+  #push:
+  #  tags: [ 'v*' ]
+
+jobs:
+  buildall:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Hello World"
+  builddeb2204:
+      uses: ./.github/workflows/build-deb-ubuntu-22.04.yml
+      secrets: inherit
+  builddeb2404:
+      uses: ./.github/workflows/build-deb-ubuntu-24.04.yml
+      secrets: inherit
