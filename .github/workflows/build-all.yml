@@ -21,3 +21,6 @@ jobs:
   builddeb2404:
       uses: ./.github/workflows/build-deb-ubuntu-24.04.yml
       secrets: inherit
+  buildpypi:
+      uses: ./.github/workflows/build-pypi.yml
+      secrets: inherit
