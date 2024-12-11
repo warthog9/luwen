@@ -8,12 +8,12 @@
 
 Name:           rust-luwen
 Version:        0.4.8
-Release:        %autorelease.git.1.499b83b
+Release:        %autorelease
 Summary:        High-level interface for safe and efficient access Tenstorrent AI accelerators
 
 License:        Apache-2.0
 URL:            https://crates.io/crates/luwen
-Source: rust-luwen-git-142.499b83b.tar.gz
+Source: 	%{name}-%{version}.tar.gz
 
 BuildRequires:  cargo-rpm-macros >= 24
 BuildRequires:  python%{python3_pkgversion}-devel
@@ -145,11 +145,26 @@ use the "internal_metrics" feature of the "%{crate}" crate.
 %{python3_sitearch}/pyluwen/
 
 ############################
+# Luwen Test Binaries
+############################
+%package     -n luwen-test-bin
+Summary:        Testing and Debug binaries associated with Luwen
+
+%description -n luwen-test-bin
+%{_description}
+
+This is Testing and Debug binaries associated with Luwen
+
+%files       -n luwen-test-bin
+%{_bindir}/*
+%{_exec_prefix}/lib/debug/usr/bin/*
+
+############################
 # Main package
 ############################
 
 %prep
-%autosetup -p1 -n rust-luwen-git-142.499b83b -p1
+%autosetup -p1 
 %cargo_prep
 
 %generate_buildrequires
@@ -241,7 +256,7 @@ tomcli \
 %endif
 
 %changelog
-* Wed Dec 11 2024 John 'Warthog9' Hawley <jhawley@tenstorrent.com> 0.4.8-1.git.1.499b83b
+* Wed Dec 11 2024 John 'Warthog9' Hawley <jhawley@tenstorrent.com> 0.4.8-1
 - Disabling Debian 12 from the build-all (jhawley@tenstorrent.com)
 - Adding PyPi workflow, this is going to be a staged commit
   (jhawley@tenstorrent.com)
