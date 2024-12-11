@@ -256,7 +256,11 @@ tomcli \
 %endif
 
 %changelog
+<<<<<<< HEAD
 * Wed Dec 11 2024 John 'Warthog9' Hawley <jhawley@tenstorrent.com> 0.4.8-1
+=======
+* Wed Dec 11 2024 John 'Warthog9' Hawley <jhawley@tenstorrent.com> 0.4.8-1.git.1.499b83b
+>>>>>>> c1cefbd (Automatic commit of package [rust-luwen] release [0.4.8-1.git.1.499b83b].)
 - Disabling Debian 12 from the build-all (jhawley@tenstorrent.com)
 - Adding PyPi workflow, this is going to be a staged commit
   (jhawley@tenstorrent.com)
