@@ -1,0 +1,102 @@
+name: Build Release rpm package - Enterprise Linux 9
+run-name: Build Release rpm package - Enterprise Linux 9
+on:
+  workflow_dispatch:
+  workflow_call:
+  #push:
+  #  tags: [ 'v*' ]
+
+jobs:
+  buildrpmel9:
+    runs-on: ubuntu-latest
+    container:
+      image: almalinux:9
+    steps:
+      - run: cat /etc/os-release
+      - run: |
+          dnf install -y \
+            'dnf-command(config-manager)' \
+            'dnf-command(copr)'
+      - run: dnf copr enable warthog9/epel9-missing-pieces -y
+      - run: dnf config-manager --set-enabled crb
+      - run: |
+          dnf install -y \
+            https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+      - run: dnf clean all && dnf update -y
+      - run: |
+          dnf install -y \
+            rust-prometheus_exporter+default-devel \
+            rust-num-derive+default-devel \
+            rust-num-traits+default-devel \
+            rust-prometheus_exporter+default-devel \
+            maturin \
+            tito
+      - uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+          fetch-depth: 0
+      - name: Extract version from tag
+        uses: damienaicheh/extract-version-from-tag-action@v1.3.0
+      - run: git tag
+      # we need to get tito tag but for right this second lets ignore it
+      #- run: |
+      #    tito tag
+      - run: |
+          tito build --rpm --offline
+#      - name: Move Debian packages
+#        run: mkdir -p artifacts && mv ../*.deb artifacts/
+#      - name: Stash the vendor directory for artifacting as well
+#        run: tar -czvf artifacts/vendor.tar.gz vendor
+#      - name: Copy Changelog to artifacts
+#        run: cp debian/changelog artifacts/changelog
+#      - name: Set environment variable for distro 
+#        id: distro_ident
+#        run: |
+#          source /etc/os-release && \
+#          echo "DISTRO_IDENT=$( echo \"${NAME}\" | sed 's/"//g' | tr '[:upper:]' '[:lower:]' )-${VERSION_ID}" \
+#                >> $GITHUB_ENV
+#      - name: Set environment variable for deb filename
+#        id: deb_filename
+#        run: echo "DEB_FILENAME=$(basename artifacts/*.deb)" >> $GITHUB_ENV
+#      - name: Set environment variable for deb filename
+#        id: deb_filename_distro
+#        run: echo DEB_FILENAME_DISTRO=$(basename artifacts/*.deb | sed "s/_all/_all-${DISTRO_IDENT}/" ) >> $GITHUB_ENV
+#      - name: Upload Debian package
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: ${{ env.DEB_FILENAME_DISTRO }}
+#          path: artifacts/${{ env.DEB_FILENAME }}
+#      - name: Upload Vendor
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: vendor-${{ env.DISTRO_IDENT }}.tar.gz
+#          path: artifacts/vendor.tar.gz
+#      - name: Upload Changelog
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: debian-changelog-${{ env.DISTRO_IDENT }}
+#          path: debian/changelog
+#      - name: Upload Artifacts
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: artifacts-${{ env.DISTRO_IDENT }}.zip
+#          path: artifacts/
+#      #- name: release
+#      #  uses: actions/create-release@v1
+#      #  id: create_release
+#      #  with:
+#      #    draft: false
+#      #    prerelease: false
+#      #    release_name: ${{ github.ref_name }}
+#      #    tag_name: ${{ github.ref }}
+#      #    #body_path: CHANGELOG.md
+#      #  env:
+#      #    GITHUB_TOKEN: ${{ github.token }}
+#      #- name: Push Git Tag
+#      #  run: |
+#      #    git push origin --tags
+#      #- name: upload debian package
+#      #  run: gh release upload ${{ github.ref_name }} ../*.deb
+#      #  env:
+#      #    GITHUB_TOKEN: ${{ github.TOKEN }}
+#
