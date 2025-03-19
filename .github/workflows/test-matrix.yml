@@ -1,0 +1,21 @@
+name: test matrix
+run-name: test matrix
+on:
+  workflow_dispatch:
+  workflow_call:
+  #push:
+  #  tags: [ 'v*' ]
+
+jobs:
+  getfedoraversions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+          fetch-depth: 0
+      - run: ls -lah
+      - id: get-versions
+        run: python3 .github/workflows/python-test.py
+    outputs:
+      matrix: ${{ steps.get-versions.outputs.matrix }}
