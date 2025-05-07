@@ -8,13 +8,6 @@ on:
   #  tags: [ 'v*' ]
 
 jobs:
-  buildall:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Hello World"
-  #builddebdebian12:
-  #    uses: ./.github/workflows/build-deb-debian-12.yml
-  #    secrets: inherit
   builddeb2204:
       uses: ./.github/workflows/build-deb-ubuntu-22.04.yml
       secrets: inherit
