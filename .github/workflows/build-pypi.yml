@@ -10,22 +10,8 @@ jobs:
   build:
     name: Build distribution 📦
     runs-on: ubuntu-24.04
-
     steps:
-    - run: sudo apt update
-    - run: |
-        sudo apt install -y \
-          build-essential \
-          cargo \
-          debhelper \
-          dh-python \
-          dh-sequence-python3 \
-          git-buildpackage \
-          gnupg \
-          libpython3-all-dev \
-          pybuild-plugin-pyproject \
-          python3-maturin \
-          python3-pip
+    - name: Checkout
     - uses: actions/checkout@v4
       with:
         fetch-tags: true
