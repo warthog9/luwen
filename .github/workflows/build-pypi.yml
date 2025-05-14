@@ -40,15 +40,17 @@ jobs:
         pip install
         build
         --user
-    - name: Build a binary wheel and a source tarball
-      run: >-
-        cd crates/pyluwen &&
-        maturin build --sdist --compatibility manylinux2014 --target x86_64-unknown-linux-gnu
+    - name: Build wheels using manylinux
+        uses: PyO3/maturin-action@v1
+        with:
+          target: x86_64
+          manylinux: 2014
+          args: --release --sdist --out dist -m crates/pyluwen/Cargo.toml
     - name: Store the distribution packages
       uses: actions/upload-artifact@v4
       with:
         name: python-package-distributions
-        path: target/wheels/
+        path: dist
 
 #  publish-to-pypi:
 #    name: >-
