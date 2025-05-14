@@ -41,11 +41,11 @@ jobs:
         build
         --user
     - name: Build wheels using manylinux
-        uses: PyO3/maturin-action@v1
-        with:
-          target: x86_64
-          manylinux: 2014
-          args: --release --sdist --out dist -m crates/pyluwen/Cargo.toml
+      uses: PyO3/maturin-action@v1
+      with:
+        target: x86_64
+        manylinux: 2014
+        args: --release --sdist --out dist -m crates/pyluwen/Cargo.toml
     - name: Store the distribution packages
       uses: actions/upload-artifact@v4
       with:
