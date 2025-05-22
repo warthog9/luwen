@@ -1,0 +1,22 @@
+name: Create Release
+run-name: Create Release
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  # what this should do is properly do a release of everything here
+  # that has a new version in it.  We aren't there yet.  So in the
+  # interim assume the main core, c++ bindings, and python bindings
+  # are all part of a release now, and they will be using the same version
+  # going forward.
+  buildall:
+    uses: ./.github/workflows/build-all.yml
+    secrets: inherit
+
+  publish-pypi:
+    needs:
+      - buildall
+    uses: ./.github/workflows/release-pypi.yml
+    secrets: inherit
