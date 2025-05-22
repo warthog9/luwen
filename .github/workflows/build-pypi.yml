@@ -34,6 +34,16 @@ jobs:
         target: x86_64
         manylinux: 2014
         args: --release --out dist -m crates/pyluwen/Cargo.toml --interpreter python${{ matrix.python-version }}
+        before-script-linux: |
+          which unzip || apt install unzip || echo "not apt"
+          which unzip || yum install unzip || echo "not yum"
+          which unzip
+          PROTOC=protoc-21.12-linux-x86_64.zip
+          if [ "$(arch)" == "i686" ]; then PROTOC=protoc-21.12-linux-x86_32.zip; fi
+          curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v21.12/$PROTOC
+          unzip $PROTOC -d protoc3
+          mv -v protoc3/bin/* /usr/local/bin/
+          mv -v protoc3/include/* /usr/local/include/
     - name: Store the wheel
       uses: actions/upload-artifact@v4
       with:
@@ -66,6 +76,16 @@ jobs:
         target: x86_64
         manylinux: 2014
         args: --release --sdist --out dist -m crates/pyluwen/Cargo.toml --features abi3-py311
+        before-script-linux: |
+          which unzip || apt install unzip || echo "not apt"
+          which unzip || yum install unzip || echo "not yum"
+          which unzip
+          PROTOC=protoc-21.12-linux-x86_64.zip
+          if [ "$(arch)" == "i686" ]; then PROTOC=protoc-21.12-linux-x86_32.zip; fi
+          curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v21.12/$PROTOC
+          unzip $PROTOC -d protoc3
+          mv -v protoc3/bin/* /usr/local/bin/
+          mv -v protoc3/include/* /usr/local/include/
     - name: Store the wheel
       uses: actions/upload-artifact@v4
       with:
