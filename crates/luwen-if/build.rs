@@ -1,10 +1,9 @@
-use std::{env, fs, path::PathBuf};
+use std::{env, fs};
 
-fn try_to_compiled_proto_file_by_name(
+fn compiled_proto_file_by_name(
     name: &str,
-    protoc_path: Option<PathBuf>,
     out_dir: &str,
-) -> Result<(), std::io::Error> {
+) -> Result<(), Box<dyn std::error::Error>> {
     let proto_file = format!("{}.proto", name);
     let outname = format!("{}/{}.rs", out_dir, name);
     let mut protoc_build_config = prost_build::Config::new();
@@ -13,33 +12,8 @@ fn try_to_compiled_proto_file_by_name(
     // Add `#[derive(Serialize)]` to all generated messages for easy HashMap conversion
     protoc_build_config.type_attribute(".", "#[derive(serde::Serialize, serde::Deserialize)]");
 
-    if let Some(protoc_path) = protoc_path {
-        protoc_build_config.protoc_executable(protoc_path);
-    }
-
     protoc_build_config.compile_protos(&[proto_file], &["bh_spirom_protobufs/"])?;
     fs::rename(format!("{}/_.rs", out_dir), outname)?;
-    Ok(())
-}
-
-fn compiled_proto_file_by_name(
-    name: &str,
-    out_dir: &str,
-) -> Result<(), Box<dyn std::error::Error>> {
-    let first_try = try_to_compiled_proto_file_by_name(name, None, out_dir);
-    match first_try {
-        Err(e) if e.kind() == std::io::ErrorKind::NotFound => {
-            // If we couldn't find the system protoc then use the vendored
-            try_to_compiled_proto_file_by_name(
-                name,
-                Some(protoc_bin_vendored::protoc_bin_path()?),
-                out_dir,
-            )?;
-        }
-        other => {
-            other?;
-        }
-    }
 
     Ok(())
 }

@@ -21,6 +21,7 @@ jobs:
             git-buildpackage \
             gnupg \
             libpython3-all-dev \
+            protobuf-compiler \
             pybuild-plugin-pyproject \
             python3-maturin \
             python3-pip
