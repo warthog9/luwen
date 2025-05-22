@@ -1,8 +1,7 @@
-use std::{env, fs, path::PathBuf};
+use std::{env, fs};
 
-fn try_to_compiled_proto_file_by_name(
+fn compiled_proto_file_by_name(
     name: &str,
-    protoc_path: Option<PathBuf>,
     out_dir: &str,
 ) -> Result<(), std::io::Error> {
     let proto_file = format!("{name}.proto");
@@ -12,10 +11,6 @@ fn try_to_compiled_proto_file_by_name(
 
     // Add `#[derive(Serialize)]` to all generated messages for easy HashMap conversion
     protoc_build_config.type_attribute(".", "#[derive(serde::Serialize, serde::Deserialize)]");
-
-    if let Some(protoc_path) = protoc_path {
-        protoc_build_config.protoc_executable(protoc_path);
-    }
 
     protoc_build_config.compile_protos(&[proto_file], &["bh_spirom_protobufs/"])?;
     fs::rename(format!("{out_dir}/_.rs"), outname)?;
