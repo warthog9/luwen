@@ -24,8 +24,9 @@ jobs:
   publish-to-testpypi:
     name: Publish Python 🐍 distribution 📦 to TestPyPI
     needs:
-    - build-py-version-specific
-    - build-py-abi3
+      - buildall
+      #- build-py-version-specific
+      #- build-py-abi3
     runs-on: ubuntu-latest
 
     environment:
@@ -36,14 +37,14 @@ jobs:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
 
     steps:
-    - name: Download all the dists
-      uses: actions/download-artifact@v4
-      with:
-        pattern: python-package-*
-        path: dist/
-        merge-multiple: true
-    - name: Publish distribution 📦 to TestPyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        repository-url: https://test.pypi.org/legacy/
-        verbose: true
+      - name: Download all the dists
+        uses: actions/download-artifact@v4
+        with:
+          pattern: python-package-*
+          path: dist/
+          merge-multiple: true
+      - name: Publish distribution 📦 to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          verbose: true
