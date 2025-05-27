@@ -6,7 +6,7 @@ on:
 
 jobs:
   # Build non-abi3 wheels for Python 3.8-3.10
-  build-version-specific:
+  build-py-version-specific:
     name: Build version-specific wheels 📦
     runs-on: ubuntu-24.04
     strategy:
@@ -51,7 +51,7 @@ jobs:
         path: dist
 
   # Build abi3 wheel for Python 3.11+
-  build-abi3:
+  build-py-abi3:
     name: Build abi3 wheel for Python 3.11+ 📦
     runs-on: ubuntu-24.04
     steps:
@@ -92,29 +92,4 @@ jobs:
         name: python-package-abi3
         path: dist
 
-  publish-to-testpypi:
-    name: Publish Python 🐍 distribution 📦 to TestPyPI
-    needs:
-    - build-version-specific
-    - build-abi3
-    runs-on: ubuntu-latest
 
-    environment:
-      name: testpypi
-      url: https://test.pypi.org/p/luwen
-
-    permissions:
-      id-token: write  # IMPORTANT: mandatory for trusted publishing
-
-    steps:
-    - name: Download all the dists
-      uses: actions/download-artifact@v4
-      with:
-        pattern: python-package-*
-        path: dist/
-        merge-multiple: true
-    - name: Publish distribution 📦 to TestPyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        repository-url: https://test.pypi.org/legacy/
-        verbose: true
