@@ -11,14 +11,47 @@ jobs:
   # interim assume the main core, c++ bindings, and python bindings
   # are all part of a release now, and they will be using the same version
   # going forward.
+
+  ###
+  # Version Change
+  ###
   versionchange:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      packages: write
-      id-token: write
     steps:
-    <stuff goes here>
+      - name: Install cargo
+        run: sudo apt install -y cargo
+      - uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+          fetch-depth: 0
+      - name: Install cargo-bump
+        run: cargo install cargo-bump
+      - name: Bump the version
+        run: cargo bump patch
+      - name: What version are we?
+        run: export luwen_ver="$( cargo metadata --format-version 1 | jq '.packages[] | select( .name =="luwen" ) | .version' | sed 's/"//g' )"
+      - name: What Version?
+        run: echo "[ ${luwen_ver} ]"
+      - name: Git e-mail
+        run: git config --global user.email "${EMAIL}"
+      - name: Git name
+        run: git config --global user.name "${NAME}"
+      - name: Git- Add
+        run: git add .
+      - name: Git- Commit
+        run: git commit -m "Version bump to - ${luwen_ver}"
+      - name: Git- Push version change up
+        run: git push
+    env:
+      EMAIL: releases@tenstorrent.com
+      NAME: Tenstorrent Releases
+
+
+  ###
+  # Change Logs Generation
+  ###
   changelogs:
     runs-on: ubuntu-latest
     permissions:
@@ -56,11 +89,15 @@ jobs:
           gbp dch \
             --debian-branch ${{ github.ref_name }} \
             -R \
-            -N ${MAJOR}.${MINOR}.${PATCH} \
+            N ${MAJOR}.${MINOR}.${PATCH} \
             --spawn-editor=never \
             --commit \
             --commit-msg="Generating Debian Changelog for ${MAJOR}.${MINOR}.${PATCH}-${NUMBER_OF_COMMITS_SINCE_TAG}"
       - run: git push
+
+  ###
+  # Trigger Building Everything
+  ###
   buildall:
     needs:
       - versionchange
@@ -68,23 +105,36 @@ jobs:
     uses: ./.github/workflows/build-all.yml
     secrets: inherit
 
-  tagrelease:
-    <stuff goes here>
-  generaterelease:
-    <stuff goes here with artifacts getting shoved in the right place>
-    <maybe tagging goes here too, unsure>
+  ###
+  # Tag the Release
+  ###
+  # tagrelease:
+  #  <stuff goes here>
+
+  ###
+  # Generate Release
+  ###
+  # generaterelease:
+  #  <stuff goes here with artifacts getting shoved in the right place>
+  #  <maybe tagging goes here too, unsure>
+
+  ###
+  # Publish PyPi
+  ###
   publish-pypi:
     needs:
       - buildall
+      - publish-to-testpypi
     uses: ./.github/workflows/release-pypi.yml
     secrets: inherit
 
+  ###
+  # Publish TEST PyPi
+  ###
   publish-to-testpypi:
     name: Publish Python 🐍 distribution 📦 to TestPyPI
     needs:
       - buildall
-      #- build-py-version-specific
-      #- build-py-abi3
     runs-on: ubuntu-latest
 
     environment:
@@ -102,7 +152,8 @@ jobs:
           path: dist/
           merge-multiple: true
       - name: Publish distribution 📦 to TestPyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          repository-url: https://test.pypi.org/legacy/
-          verbose: true
+        run: echo "Hi!"
+        #   uses: pypa/gh-action-pypi-publish@release/v1
+        #   with:
+        #     repository-url: https://test.pypi.org/legacy/
+        #     verbose: true
