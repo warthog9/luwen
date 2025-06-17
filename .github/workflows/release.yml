@@ -80,8 +80,10 @@ jobs:
         env:
           EMAIL: releases@tenstorrent.com
           NAME: Tenstorrent Releases
-      - name: Link the Ubuntu build stuff in as 'debian/'
-        run: rm debian && ln -s debian.debian debian
+      - name: Link the Debian build stuff in as 'debian/'
+        run: rm debian
+      - run:  ln -s debian.debian debian
+      - run: ls -lah
       - name: Generate Debian Changelog
         run: |
           gbp dch \
