@@ -1,14 +1,14 @@
 [package]
 name = "luwen-ref"
-version = "0.0.6"
+version = "0.0.7"
 description = "Reference pci communication implementation"
 edition = "2021"
 license = "Apache-2.0"
 
 [dependencies]
-ttkmd-if = {path = "../ttkmd-if", version = "0.0.6" }
-luwen-if = {path = "../luwen-if", version = "0.0.6" }
-luwen-core = {path = "../luwen-core", version = "0.0.6"}
+ttkmd-if = {path = "../ttkmd-if", version = "0.0.7" }
+luwen-if = {path = "../luwen-if", version = "0.0.7" }
+luwen-core = {path = "../luwen-core", version = "0.0.7"}
 
 thiserror = "1.0.40"
 
