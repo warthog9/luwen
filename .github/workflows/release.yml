@@ -47,6 +47,8 @@ jobs:
   # Change Logs Generation
   ###
   changelogs:
+    needs:
+      - versionchange
     runs-on: ubuntu-latest
     permissions:
       contents: write
