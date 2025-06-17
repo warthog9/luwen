@@ -53,6 +53,10 @@ jobs:
       packages: write
       id-token: write
     steps:
+      - run: sudo apt update
+      - run: |
+          sudo apt install -y \
+            git-buildpackage
       - uses: actions/checkout@v4
         with:
           fetch-tags: true
