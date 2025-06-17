@@ -96,7 +96,16 @@ jobs:
           NAME: Tenstorrent Releases
       - name: ok what happened
         run: git diff
-      #- run: git push
+      - name: Setup commit
+        run: |
+          git config --global user.email "${EMAIL}"
+          git config --global user.name "${NAME}"
+          git add .
+          git commit -m "Generating Ubuntu & Debian Changelog for ${MAJOR}.${MINOR}.${PATCH}-${NUMBER_OF_COMMITS_SINCE_TAG}"
+          git push
+        env:
+          EMAIL: releases@tenstorrent.com
+          NAME: Tenstorrent Releases
 
   ###
   # Trigger Building Everything
