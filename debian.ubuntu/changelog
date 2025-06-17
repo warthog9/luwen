@@ -1,3 +1,60 @@
+rust-luwen (0.4.8) noble; urgency=medium
+
+  [ John 'Warthog9' Hawley ]
+  * Add debian.ubuntu
+  * Adding Ubuntu 22.04 and 24.04 build for testing
+  * Adding PyPi workflow, this is going to be a staged commit
+  * Fixing spec file
+  * Merging in the changes from June
+  * Adjust pypi release and setup testing for full release stuff
+  * Proto-c: Make more optional
+  * workflows: change build-pypi.yml name so it's clear it's building not publishing
+  * VERSION TRASH
+  * Workflows: Moving upload around into release
+  * Trying this here instead
+  * Adding release bits that are missing, this will need changing
+  * Adding Version bumping
+  * REMOVE - Forcing versions down for testing stuff
+  * Flipping to cargo-workspaces from cargo-bump
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.2
+
+  [ John 'Warthog9' Hawley ]
+  * release: fixing missing install and changelog generation for upload
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.3
+
+  [ John 'Warthog9' Hawley ]
+  * Messing with the debian directory stuff some more
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.4
+
+  [ John 'Warthog9' Hawley ]
+  * Lets add Debian into the mix for sure
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.5
+
+  [ John 'Warthog9' Hawley ]
+  * breaking things up
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.6
+
+  [ John 'Warthog9' Hawley ]
+  * debian.debian: bringing things more up to date with Ubuntu
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.7
+
+  [ John 'Warthog9' Hawley ]
+  * Ok lets try actually committing here
+
+ -- Tenstorrent Releases <releases@tenstorrent.com>  Tue, 17 Jun 2025 20:31:00 +0000
+
 rust-luwen (0.0.1) unstable; urgency=low
   [ Evangelos Ribeiro Tzaras ]
   * [f6d90d5] docs: gbp-clone: testing
