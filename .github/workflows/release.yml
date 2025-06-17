@@ -74,12 +74,14 @@ jobs:
             --debian-branch ${{ github.ref_name }} \
             -R \
             -N ${MAJOR}.${MINOR}.${PATCH} \
-            --spawn-editor=never \
-            --commit \
-            --commit-msg="Generating Ubuntu Changelog for ${MAJOR}.${MINOR}.${PATCH}-${NUMBER_OF_COMMITS_SINCE_TAG}"
+            --spawn-editor=never
+            #--commit \
+            #--commit-msg="Generating Ubuntu Changelog for ${MAJOR}.${MINOR}.${PATCH}-${NUMBER_OF_COMMITS_SINCE_TAG}"
         env:
           EMAIL: releases@tenstorrent.com
           NAME: Tenstorrent Releases
+      - name: ok what happened
+        run: git diff
       - name: Link the Ubuntu build stuff in as 'debian/'
         run: ln -s debian.debian debian
       - name: Generate Debian Changelog
@@ -91,7 +93,7 @@ jobs:
             --spawn-editor=never \
             --commit \
             --commit-msg="Generating Debian Changelog for ${MAJOR}.${MINOR}.${PATCH}-${NUMBER_OF_COMMITS_SINCE_TAG}"
-      - run: git push
+      #- run: git push
 
   ###
   # Trigger Building Everything
