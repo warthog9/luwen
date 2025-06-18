@@ -38,6 +38,7 @@ jobs:
         run: export luwen_ver="$( cargo metadata --format-version 1 | jq '.packages[] | select( .name =="luwen" ) | .version' | sed 's/"//g' )"
       - name: What Version?
         run: echo "[ ${luwen_ver} ]"
+      - run: git log --format="%H" -n 1
     env:
       EMAIL: releases@tenstorrent.com
       NAME: Tenstorrent Releases
@@ -63,6 +64,7 @@ jobs:
         with:
           fetch-tags: true
           fetch-depth: 0
+      - run: git log --format="%H" -n 1
       - name: Extract version from tag
         uses: damienaicheh/extract-version-from-tag-action@v1.3.0
       - run: git tag
