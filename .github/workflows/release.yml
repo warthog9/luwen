@@ -13,12 +13,23 @@ jobs:
   # going forward.
 
   ###
-  # Version Change
+  # Repo Updates
+  #   So, fun fact, the way actions/checkout@v4 works it pulls / works based on what triggered it
+  #   this leads to a problem because I don't want to progress till various things have completed
+  #   in a roughly specific order, but I also need to know what/where things came from - which ok
+  #   fair enough.
+  #
+  #   This means that repo changes, so version changes, changelogs, etc I guess all need to happen
+  #   not only at once but somehow need to wait on things down the line outside this triggering to
+  #   come back and allow other things to happen.  Or I suppose I snag the sha from versionchange
+  #   and pass it along as "latest" in the series, could work too and bypass some of this?
   ###
   versionchange:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    outputs:
+      git_hash: ${{ steps.new-git-hash.outputs.git_hash }}
     steps:
       - name: Install cargo
         run: sudo apt install -y cargo
@@ -38,7 +49,14 @@ jobs:
         run: export luwen_ver="$( cargo metadata --format-version 1 | jq '.packages[] | select( .name =="luwen" ) | .version' | sed 's/"//g' )"
       - name: What Version?
         run: echo "[ ${luwen_ver} ]"
-      - run: git log --format="%H" -n 1
+      - name: Find New Git Hash
+        id: new-git-hash
+        run: |
+          git_hash_env="git_hash=$( git log --format="%H" -n 1 )"
+          echo "${git_hash_env}"
+          echo "${git_hash_env}" >> "$GITHUB_OUTPUT"
+      - name: New Git Hash
+        run: echo "${git_hash_env}"
     env:
       EMAIL: releases@tenstorrent.com
       NAME: Tenstorrent Releases
@@ -56,13 +74,16 @@ jobs:
       packages: write
       id-token: write
     steps:
+      - name: New Git Hash
+        run: echo "${{ needs.versionchange.outputs.git_hash }}"
       - run: sudo apt update
       - run: |
           sudo apt install -y \
             git-buildpackage
-      - run: sleep 30
+      - run: echo ${{ needs.versionchange.outputs.git_hash }}
       - uses: actions/checkout@v4
         with:
+          ref: ${{ needs.versionchange.outputs.git_hash }}
           fetch-tags: true
           fetch-depth: 0
       - run: git log --format="%H" -n 1
