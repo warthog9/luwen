@@ -83,7 +83,7 @@ jobs:
       - run: echo ${{ needs.versionchange.outputs.git_hash }}
       - uses: actions/checkout@v4
         with:
-          ref: ${{ needs.versionchange.outputs.git_hash }}
+          #ref: ${{ needs.versionchange.outputs.git_hash }}
           fetch-tags: true
           fetch-depth: 0
       - run: git log --format="%H" -n 1
@@ -128,6 +128,7 @@ jobs:
           git config --global user.name "${NAME}"
           git add .
           git commit -m "Generating Ubuntu & Debian Changelog for ${MAJOR}.${MINOR}.${PATCH}-${NUMBER_OF_COMMITS_SINCE_TAG}"
+          git pull --rebase
           git push
         env:
           EMAIL: releases@tenstorrent.com
