@@ -30,6 +30,7 @@ jobs:
       contents: write
     outputs:
       git_hash: ${{ steps.new-git-hash.outputs.git_hash }}
+      luwen_version: ${{ steps.new-luwen-version.outputs.luwen_version_new }}
     steps:
       - name: Install cargo
         run: sudo apt install -y cargo
@@ -48,11 +49,14 @@ jobs:
       - name: What version are we?
         run: export luwen_ver="$( cargo metadata --format-version 1 | jq '.packages[] | select( .name =="luwen" ) | .version' | sed 's/"//g' )"
       - name: What Version?
-        run: echo "[ ${luwen_ver} ]"
+        id: new-luwen-version
+        run:
+          echo "[ ${luwen_ver} ]"
+          echo "luwen_version_new=${git_hash_env}" >> "$GITHUB_OUTPUT"
       - name: Find New Git Hash
         id: new-git-hash
         run: |
-          git_hash_env="git_hash=$( git log --format="%H" -n 1 )"
+          export git_hash_env="git_hash=$( git log --format="%H" -n 1 )"
           echo "${git_hash_env}"
           echo "${git_hash_env}" >> "$GITHUB_OUTPUT"
       - name: New Git Hash
@@ -73,6 +77,8 @@ jobs:
       contents: write
       packages: write
       id-token: write
+    outputs:
+      git_hash: ${{ steps.new-git-hash.outputs.git_hash }}
     steps:
       - name: dump the envs, I'm curious
         run: env
@@ -138,6 +144,12 @@ jobs:
         env:
           EMAIL: releases@tenstorrent.com
           NAME: Tenstorrent Releases
+      - name: Find New Git Hash
+        id: new-git-hash
+        run: |
+          export git_hash_env="git_hash=$( git log --format="%H" -n 1 )"
+          echo "${git_hash_env}"
+          echo "${git_hash_env}" >> "$GITHUB_OUTPUT"
 
   ###
   # Trigger Building Everything
@@ -146,6 +158,7 @@ jobs:
     needs:
       - versionchange
       - changelogs
+      - tagrelease
     uses: ./.github/workflows/build-all.yml
     secrets: inherit
 
@@ -163,17 +176,22 @@ jobs:
       packages: write
       id-token: write
     steps:
+      - name: dump the envs, I'm curious
+        run: env
       - name: New Git Hash
-        run: echo "${{ needs.versionchange.outputs.git_hash }}"
+        run: echo "${{ needs.changelog.outputs.git_hash }}"
       - uses: actions/checkout@v4
         with:
-          #ref: ${{ needs.versionchange.outputs.git_hash }}
+          ref: ${{ needs.changelog.outputs.git_hash }}
           fetch-tags: true
           fetch-depth: 0
       - run: git log --format="%H" -n 1
       - name: Extract version from tag
         uses: damienaicheh/extract-version-from-tag-action@v1.3.0
-      - run: git tag
+      - run: |
+          git tag v${{ needs.versionchange.outputs.luwen_version }}
+          git tag
+          git push --tags
 
   ###
   # Generate Release
