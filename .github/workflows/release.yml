@@ -30,7 +30,7 @@ jobs:
       contents: write
     outputs:
       git_hash: ${{ steps.new-git-hash.outputs.git_hash }}
-      luwen_version: ${{ steps.new-luwen-version.outputs.luwen_version_new }}
+      luwen_version_new: ${{ steps.new-luwen-version.outputs.luwen_version_new }}
     steps:
       - name: Install cargo
         run: sudo apt install -y cargo
@@ -169,6 +169,7 @@ jobs:
   #  <stuff goes here>
   tagrelease:
     needs:
+      - versionchange
       - changelogs
     runs-on: ubuntu-latest
     permissions:
@@ -189,7 +190,9 @@ jobs:
       - name: Extract version from tag
         uses: damienaicheh/extract-version-from-tag-action@v1.3.0
       - run: |
-          git tag v${{ needs.versionchange.outputs.luwen_version }}
+          echo ${{ needs.versionchange.outputs.luwen_version_new }}
+          echo ${{ needs.versionchange.outputs.git_hash }}
+          git tag v${{ needs.versionchange.outputs.luwen_version_new }}
           git tag
           git push --tags
 
