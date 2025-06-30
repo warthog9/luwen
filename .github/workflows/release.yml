@@ -74,6 +74,8 @@ jobs:
       packages: write
       id-token: write
     steps:
+      - name: dump the envs, I'm curious
+        run: env
       - name: New Git Hash
         run: echo "${{ needs.versionchange.outputs.git_hash }}"
       - run: sudo apt update
@@ -86,6 +88,9 @@ jobs:
           #ref: ${{ needs.versionchange.outputs.git_hash }}
           fetch-tags: true
           fetch-depth: 0
+      # Ok checkout doesn't do what I want it to do in the way it does it *sigh*
+      # so we need to snag a pull to catch up from where it started
+      - run: git pull
       - run: git log --format="%H" -n 1
       - name: Extract version from tag
         uses: damienaicheh/extract-version-from-tag-action@v1.3.0
@@ -149,6 +154,26 @@ jobs:
   ###
   # tagrelease:
   #  <stuff goes here>
+  tagrelease:
+    needs:
+      - changelogs
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+    steps:
+      - name: New Git Hash
+        run: echo "${{ needs.versionchange.outputs.git_hash }}"
+      - uses: actions/checkout@v4
+        with:
+          #ref: ${{ needs.versionchange.outputs.git_hash }}
+          fetch-tags: true
+          fetch-depth: 0
+      - run: git log --format="%H" -n 1
+      - name: Extract version from tag
+        uses: damienaicheh/extract-version-from-tag-action@v1.3.0
+      - run: git tag
 
   ###
   # Generate Release
