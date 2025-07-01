@@ -32,6 +32,13 @@ jobs:
       git_hash: ${{ steps.new-git-hash.outputs.git_hash }}
       luwen_version: ${{ steps.luwenver.outputs.luwen_version }}
       luwen_version_new: ${{ steps.new-luwen-version.outputs.luwen_version_new }}
+      version_major: ${{ steps.version.outputs.major }}
+      version_minor: ${{ steps.version.outputs.minor }}
+      version_patch: ${{ steps.version.outputs.patch }}
+      version_prerelease: ${{ steps.version.outputs.prerelease }}
+      version_build: ${{ steps.version.outputs.build }}
+      version_full: ${{ steps.version.outputs.full }}
+      number_of_commits_since_tag: ${{ steps.num-commits-since-tag.outputs.num_commits_since_tag }}
     steps:
       - name: Install cargo
         run: sudo apt install -y cargo
@@ -59,6 +66,17 @@ jobs:
           export luwen_version_new="$( cargo metadata --format-version 1 | jq '.packages[] | select( .name =="luwen" ) | .version' | sed 's/"//g' )"
           echo "luwen_version_new=${luwen_version_new}"
           echo "luwen_version_new=${luwen_version_new}" >> "$GITHUB_OUTPUT"
+      - name: Parse version from string
+        id: version
+        uses: release-kit/semver@v2
+        with:
+          string: ${{ steps.new-luwen-version.outputs.luwen_version_new }}
+      - name: Find number of commits since last tag
+        id: num-commits-since-tag
+        run:
+          export num_commits_since="num_commits_since_tag=$( git rev-list v${{ needs.versionchange.outputs.luwen_version }}..v${{ needs.versionchange.outputs.luwen_version_new }} --count )"
+          echo "${num_commits_since}"
+          echo "${num_commits_since}" >> "$GITHUB_OUTPUT"
       - run: echo ${{ steps.luwenver.outputs.luwen_version }}
       - name: Find New Git Hash
         id: new-git-hash
@@ -87,9 +105,10 @@ jobs:
     outputs:
       git_hash: ${{ steps.new-git-hash.outputs.git_hash }}
     env:
-        MAJOR: ${{ steps.version.outputs.major }}
-        MINOR: ${{ steps.version.outputs.minor }}
-        PATCH: ${{ steps.version.outputs.patch }}
+        MAJOR: ${{ needs.versionchange.outputs.version_major }}
+        MINOR: ${{ needs.versionchange.outputs.version_minor }}
+        PATCH: ${{ needs.versionchange.outputs.version_patch }}
+        NUMBER_OF_COMMITS_SINCE_TAG: ${{ needs.versionchange.outputs.number_of_commits_since_tag }}
     steps:
       - name: dump the envs, I'm curious
         run: env
@@ -114,16 +133,10 @@ jobs:
       - run: git tag
       # Ok this needs to get up leveled somewhere so that it can be shared across Debian and Ubuntu obviously
       - run: ls -lah
-      - name: Parse version from string
-        id: version
-        uses: release-kit/semver@v2
-        with:
-          string: ${{ needs.versionchange.outputs.luwen_version_new }}
       - name: Link the Ubuntu build stuff in as 'debian/'
         run: ln -s debian.ubuntu debian
       - name: Generate Ubuntu Changelog
         run: |
-          export NUMBER_OF_COMMITS_SINCE_TAG=$( git rev-list v${{ needs.versionchange.outputs.luwen_version }}..v${{ needs.versionchange.outputs.luwen_version_new }} --count )
           echo "Major: ${MAJOR}"
           echo "Minor: ${MINOR}"
           echo "Patch: ${PATCH}"
@@ -154,7 +167,6 @@ jobs:
         run: git diff
       - name: Setup commit
         run: |
-          export NUMBER_OF_COMMITS_SINCE_TAG=$( git rev-list v${{ needs.versionchange.outputs.luwen_version }}..v${{ needs.versionchange.outputs.luwen_version_new }} --count )
           git config --global user.email "${EMAIL}"
           git config --global user.name "${NAME}"
           git add .
