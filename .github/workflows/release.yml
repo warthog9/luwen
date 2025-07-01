@@ -86,6 +86,10 @@ jobs:
       id-token: write
     outputs:
       git_hash: ${{ steps.new-git-hash.outputs.git_hash }}
+    env:
+        MAJOR: ${{ steps.version.outputs.major }}
+        MINOR: ${{ steps.version.outputs.minor }}
+        PATCH: ${{ steps.version.outputs.patch }}
     steps:
       - name: dump the envs, I'm curious
         run: env
@@ -115,16 +119,11 @@ jobs:
         uses: release-kit/semver@v2
         with:
           string: ${{ needs.versionchange.outputs.luwen_version_new }}
-      - name: Set the environment variables to make my life easier
-        run: |
-          export MAJOR=${{ steps.version.outputs.major }}
-          export MINOR=${{ steps.version.outputs.minor }}
-          export PATCH=${{ steps.version.outputs.patch }}
-          export NUMBER_OF_COMMITS_SINCE_TAG=$( git rev-list v${{ needs.versionchange.outputs.luwen_version }}..v${{ needs.versionchange.outputs.luwen_version_new }} --count )
       - name: Link the Ubuntu build stuff in as 'debian/'
         run: ln -s debian.ubuntu debian
       - name: Generate Ubuntu Changelog
         run: |
+          export NUMBER_OF_COMMITS_SINCE_TAG=$( git rev-list v${{ needs.versionchange.outputs.luwen_version }}..v${{ needs.versionchange.outputs.luwen_version_new }} --count )
           echo "Major: ${MAJOR}"
           echo "Minor: ${MINOR}"
           echo "Patch: ${PATCH}"
@@ -155,6 +154,7 @@ jobs:
         run: git diff
       - name: Setup commit
         run: |
+          export NUMBER_OF_COMMITS_SINCE_TAG=$( git rev-list v${{ needs.versionchange.outputs.luwen_version }}..v${{ needs.versionchange.outputs.luwen_version_new }} --count )
           git config --global user.email "${EMAIL}"
           git config --global user.name "${NAME}"
           git add .
