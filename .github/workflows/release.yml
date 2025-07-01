@@ -45,26 +45,21 @@ jobs:
         run: git config --global user.name "${NAME}"
       - name: Install cargo-workspaces
         run: cargo install cargo-workspaces@0.3.6 --locked
-      - name: Bump the version
-        run: cargo ws version patch --allow-branch main --no-git-tag --message "Cargo Release %v" -y
       - name: What version are we?
         id: luwenver
         run: |
           export luwen_ver="$( cargo metadata --format-version 1 | jq '.packages[] | select( .name =="luwen" ) | .version' | sed 's/"//g' )"
           echo "luwen_version=${luwen_ver}"
           echo "luwen_version=${luwen_ver}" >> "$GITHUB_OUTPUT"
-      - name: What Version?
+      - name: Bump the version
+        run: cargo ws version patch --allow-branch main --no-git-tag --message "Cargo Release %v" -y
+      - name: What NEW Version?
         id: new-luwen-version
         run: |
-          export luwen_ver="${{ steps.luwenver.outputs.luwen_version }}"
-          echo "[ ${luwen_ver} ]"
-          echo "luwen_version_new=${git_hash_env}" >> "$GITHUB_OUTPUT"
+          export luwen_version_new="$( cargo metadata --format-version 1 | jq '.packages[] | select( .name =="luwen" ) | .version' | sed 's/"//g' )"
+          echo "luwen_version_new=${luwen_version_new}"
+          echo "luwen_version_new=${luwen_version_new}" >> "$GITHUB_OUTPUT"
       - run: echo ${{ steps.luwenver.outputs.luwen_version }}
-      - name: Parse version from string
-        id: version
-        uses: release-kit/semver@v2
-        with:
-          string: ${{ steps.luwenver.outputs.luwen_version }}
       - name: Find New Git Hash
         id: new-git-hash
         run: |
@@ -115,6 +110,17 @@ jobs:
       - run: git tag
       # Ok this needs to get up leveled somewhere so that it can be shared across Debian and Ubuntu obviously
       - run: ls -lah
+      - name: Parse version from string
+        id: version
+        uses: release-kit/semver@v2
+        with:
+          string: ${{ needs.versionchange.outputs.luwen_version_new }}
+      - name: Set the environment variables to make my life easier
+        run: |
+          export MAJOR=${{ steps.version.outputs.major }}
+          export MINOR=${{ steps.version.outputs.minor }}
+          export PATCH=${{ steps.version.outputs.patch }}
+          export NUMBER_OF_COMMITS_SINCE_TAG=$( git rev-list tag..v${{ needs.versionchange.outputs.luwen_version }} --count )
       - name: Link the Ubuntu build stuff in as 'debian/'
         run: ln -s debian.ubuntu debian
       - name: Generate Ubuntu Changelog
@@ -124,8 +130,6 @@ jobs:
             -R \
             -N ${MAJOR}.${MINOR}.${PATCH} \
             --spawn-editor=never
-            #--commit \
-            #--commit-msg="Generating Ubuntu Changelog for ${MAJOR}.${MINOR}.${PATCH}-${NUMBER_OF_COMMITS_SINCE_TAG}"
         env:
           EMAIL: releases@tenstorrent.com
           NAME: Tenstorrent Releases
@@ -200,8 +204,6 @@ jobs:
           fetch-tags: true
           fetch-depth: 0
       - run: git log --format="%H" -n 1
-      - name: Extract version from tag
-        uses: damienaicheh/extract-version-from-tag-action@v1.3.0
       - run: |
           echo ${{ needs.versionchange.outputs.luwen_version_new }}
           echo ${{ needs.versionchange.outputs.git_hash }}
