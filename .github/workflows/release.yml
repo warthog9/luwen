@@ -30,6 +30,7 @@ jobs:
       contents: write
     outputs:
       git_hash: ${{ steps.new-git-hash.outputs.git_hash }}
+      luwen_version: ${{ steps.luwenver.outputs.luwen_version }}
       luwen_version_new: ${{ steps.new-luwen-version.outputs.luwen_version_new }}
     steps:
       - name: Install cargo
@@ -47,21 +48,23 @@ jobs:
       - name: Bump the version
         run: cargo ws version patch --allow-branch main --no-git-tag --message "Cargo Release %v" -y
       - name: What version are we?
-        id: luwen-ver
+        id: luwenver
         run: |
           export luwen_ver="$( cargo metadata --format-version 1 | jq '.packages[] | select( .name =="luwen" ) | .version' | sed 's/"//g' )"
-          echo "${luwen_ver}" >> "GITHUB_OUTPUT"
-          echo "${luwen_ver}"
+          echo "luwen_version=${luwen_ver}"
+          echo "luwen_version=${luwen_ver}" >> "GITHUB_OUTPUT"
       - name: What Version?
         id: new-luwen-version
-        run:
+        run: |
+          export luwen_ver="${{ steps.luwenver.outputs.luwen_version }}"
           echo "[ ${luwen_ver} ]"
           echo "luwen_version_new=${git_hash_env}" >> "$GITHUB_OUTPUT"
+      - run: echo ${{ steps.luwenver.outputs.luwen_version }}
       - name: Parse version from string
         id: version
         uses: release-kit/semver@v2
         with:
-          string: ${{ steps.luwen-ver.outputs.luwen_Version }}
+          string: ${{ steps.luwenver.outputs.luwen_version }}
       - name: Find New Git Hash
         id: new-git-hash
         run: |
