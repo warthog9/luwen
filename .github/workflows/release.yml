@@ -47,12 +47,21 @@ jobs:
       - name: Bump the version
         run: cargo ws version patch --allow-branch main --no-git-tag --message "Cargo Release %v" -y
       - name: What version are we?
-        run: export luwen_ver="$( cargo metadata --format-version 1 | jq '.packages[] | select( .name =="luwen" ) | .version' | sed 's/"//g' )"
+        id: luwen-ver
+        run: |
+          export luwen_ver="$( cargo metadata --format-version 1 | jq '.packages[] | select( .name =="luwen" ) | .version' | sed 's/"//g' )"
+          echo "${luwen_ver}" >> "GITHUB_OUTPUT"
+          echo "${luwen_ver}"
       - name: What Version?
         id: new-luwen-version
         run:
           echo "[ ${luwen_ver} ]"
           echo "luwen_version_new=${git_hash_env}" >> "$GITHUB_OUTPUT"
+      - name: Parse version from string
+        id: version
+        uses: release-kit/semver@v2
+        with:
+          string: ${{ steps.luwen-ver.outputs.luwen_Version }}
       - name: Find New Git Hash
         id: new-git-hash
         run: |
@@ -84,11 +93,11 @@ jobs:
         run: env
       - name: New Git Hash
         run: echo "${{ needs.versionchange.outputs.git_hash }}"
+      - run: echo ${{ needs.versionchange.outputs.git_hash }}
       - run: sudo apt update
       - run: |
           sudo apt install -y \
             git-buildpackage
-      - run: echo ${{ needs.versionchange.outputs.git_hash }}
       - uses: actions/checkout@v4
         with:
           #ref: ${{ needs.versionchange.outputs.git_hash }}
@@ -98,8 +107,8 @@ jobs:
       # so we need to snag a pull to catch up from where it started
       - run: git pull
       - run: git log --format="%H" -n 1
-      - name: Extract version from tag
-        uses: damienaicheh/extract-version-from-tag-action@v1.3.0
+      #- name: Extract version from tag
+      #  uses: damienaicheh/extract-version-from-tag-action@v1.3.0
       - run: git tag
       # Ok this needs to get up leveled somewhere so that it can be shared across Debian and Ubuntu obviously
       - run: ls -lah
@@ -180,7 +189,8 @@ jobs:
       - name: dump the envs, I'm curious
         run: env
       - name: New Git Hash
-        run: echo "${{ needs.changelog.outputs.git_hash }}"
+        run: echo "${{ needs.changelogs.outputs.git_hash }}"
+      - run: echo ${{ needs.versionchange.outputs.git_hash }}
       - uses: actions/checkout@v4
         with:
           ref: ${{ needs.changelog.outputs.git_hash }}
