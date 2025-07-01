@@ -52,7 +52,7 @@ jobs:
         run: |
           export luwen_ver="$( cargo metadata --format-version 1 | jq '.packages[] | select( .name =="luwen" ) | .version' | sed 's/"//g' )"
           echo "luwen_version=${luwen_ver}"
-          echo "luwen_version=${luwen_ver}" >> "GITHUB_OUTPUT"
+          echo "luwen_version=${luwen_ver}" >> "$GITHUB_OUTPUT"
       - name: What Version?
         id: new-luwen-version
         run: |
