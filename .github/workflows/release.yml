@@ -74,7 +74,7 @@ jobs:
       - name: Find number of commits since last tag
         id: num-commits-since-tag
         run:
-          export num_commits_since="num_commits_since_tag=$( git rev-list v${{ steps.luwenver.outputs.luwen_version }}..v${{ steps.new-luwen-version.outputs.luwen_version_new }} --count )"
+          export num_commits_since="num_commits_since_tag=$( git rev-list v$(git describe --tags --abbrev=0)..HEAD --count )"
           echo "${num_commits_since}"
           echo "${num_commits_since}" >> "$GITHUB_OUTPUT"
       - run: echo ${{ steps.luwenver.outputs.luwen_version }}
