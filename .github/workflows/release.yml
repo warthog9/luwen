@@ -120,11 +120,15 @@ jobs:
           export MAJOR=${{ steps.version.outputs.major }}
           export MINOR=${{ steps.version.outputs.minor }}
           export PATCH=${{ steps.version.outputs.patch }}
-          export NUMBER_OF_COMMITS_SINCE_TAG=$( git rev-list tag..v${{ needs.versionchange.outputs.luwen_version }} --count )
+          export NUMBER_OF_COMMITS_SINCE_TAG=$( git rev-list v${{ needs.versionchange.outputs.luwen_version }}..v${{ needs.versionchange.outputs.luwen_version_new }} --count )
       - name: Link the Ubuntu build stuff in as 'debian/'
         run: ln -s debian.ubuntu debian
       - name: Generate Ubuntu Changelog
         run: |
+          echo "Major: ${MAJOR}"
+          echo "Minor: ${MINOR}"
+          echo "Patch: ${PATCH}"
+          echo "Num Patch: ${UMBER_OF_COMMITS_SINCE_TAG}"
           gbp dch \
             --debian-branch ${{ github.ref_name }} \
             -R \
