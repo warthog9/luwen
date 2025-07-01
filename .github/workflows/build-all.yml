@@ -9,6 +9,7 @@ on:
 
 jobs:
   buildall:
+    name: Build All the packages!
     runs-on: ubuntu-latest
     steps:
       - run: echo "Hello World"

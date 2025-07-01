@@ -7,7 +7,8 @@ on:
   #  tags: [ 'v*' ]
 
 jobs:
-  builddeb2204:
+  builddeb2404:
+    name: Build Release debian package - Ubuntu 24.04
     runs-on: ubuntu-24.04
     steps:
       - run: sudo apt update
