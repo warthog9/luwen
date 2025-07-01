@@ -1,12 +1,12 @@
 [package]
 name = "luwen-if"
-version = "0.0.17"
+version = "0.0.18"
 description = "Generic interface to Tenstorrent ai accelerators, abstracting the details of communication"
 edition = "2021"
 license = "Apache-2.0"
 
 [dependencies]
-luwen-core = {path = "../luwen-core", version = "0.0.17"}
+luwen-core = {path = "../luwen-core", version = "0.0.18"}
 
 thiserror = "1.0.40"
 
