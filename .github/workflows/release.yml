@@ -263,9 +263,6 @@ jobs:
               "commit_template": "- #{{TITLE}} (#{{MERGE_SHA}}) by @#{{AUTHOR}}"
             }
 
-      - name: where is stuff?
-        run: find /
-
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
