@@ -263,6 +263,7 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: v${{ needs.versionchange.outputs.luwen_version_new }}
           files: |
             python3-pyluwen_${{ needs.versionchange.outputs.luwen_version_new }}_all-ubuntu-22.04.deb
             python3-pyluwen_${{ needs.versionchange.outputs.luwen_version_new }}_all-ubuntu-24.04.deb
