@@ -272,10 +272,8 @@ jobs:
         with:
           tag_name: v${{ needs.versionchange.outputs.luwen_version_new }}
           files: |
-            ${{ github.workspace }}/python3-pyluwen_${{ needs.versionchange.outputs.luwen_version_new }}_all-ubuntu-22.04.deb
-            ${{ github.workspace }}/python3-pyluwen_${{ needs.versionchange.outputs.luwen_version_new }}_all-ubuntu-24.04.deb
-            ${{ github.workspace }}/python-package-abi3*
-            ${{ github.workspace }}/python-package-py3.*
+            ${{ github.workspace }}/*/python3-pyluwen_*.deb
+            ${{ github.workspace }}/python-package-*/*.whl
           body: ${{ steps.build_changelog.outputs.changelog }}
           draft: false
           prerelease: false
