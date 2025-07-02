@@ -1,3 +1,209 @@
+rust-luwen (0.0.31) noble; urgency=medium
+
+  [ John 'Warthog9' Hawley ]
+  * Add debian.ubuntu
+  * Adding Ubuntu 22.04 and 24.04 build for testing
+  * Adding PyPi workflow, this is going to be a staged commit
+  * Fixing spec file
+  * Merging in the changes from June
+  * Adjust pypi release and setup testing for full release stuff
+  * Proto-c: Make more optional
+  * workflows: change build-pypi.yml name so it's clear it's building not publishing
+  * VERSION TRASH
+  * Workflows: Moving upload around into release
+  * Trying this here instead
+  * Adding release bits that are missing, this will need changing
+  * Adding Version bumping
+  * REMOVE - Forcing versions down for testing stuff
+  * Flipping to cargo-workspaces from cargo-bump
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.2
+
+  [ John 'Warthog9' Hawley ]
+  * release: fixing missing install and changelog generation for upload
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.3
+
+  [ John 'Warthog9' Hawley ]
+  * Messing with the debian directory stuff some more
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.4
+
+  [ John 'Warthog9' Hawley ]
+  * Lets add Debian into the mix for sure
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.5
+
+  [ John 'Warthog9' Hawley ]
+  * breaking things up
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.6
+
+  [ John 'Warthog9' Hawley ]
+  * debian.debian: bringing things more up to date with Ubuntu
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.7
+
+  [ John 'Warthog9' Hawley ]
+  * Ok lets try actually committing here
+
+  [ Tenstorrent Releases ]
+  * Generating Ubuntu & Debian Changelog for 0.4.8-153
+  * Generating Ubuntu & Debian Changelog for 0.4.8-154
+
+  [ John 'Warthog9' Hawley ]
+  * Ok make changelogs after version change
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.8
+
+  [ John 'Warthog9' Hawley ]
+  * Fixing luwen -> pyluwen
+  * checking things
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.9
+
+  [ John 'Warthog9' Hawley ]
+  * Sleeping for 30 is absolutely not the right call but I'm curious
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.10
+
+  [ John 'Warthog9' Hawley ]
+  * Maybe this'll help
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.11
+  * Cargo Release 0.0.12
+  * Generating Ubuntu & Debian Changelog for 0.4.8-164
+
+  [ John 'Warthog9' Hawley ]
+  * mucking with stuff
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.13
+  * Generating Ubuntu & Debian Changelog for 0.4.8-168
+
+  [ John 'Warthog9' Hawley ]
+  * tag the commits
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.14
+  * Generating Ubuntu & Debian Changelog for 0.4.8-171
+
+  [ John 'Warthog9' Hawley ]
+  * ok more stuff
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.15
+  * Generating Ubuntu & Debian Changelog for 0.4.8-174
+
+  [ John 'Warthog9' Hawley ]
+  * ok more fun
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.16
+
+  [ John 'Warthog9' Hawley ]
+  * more more testing
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.17
+
+  [ John 'Warthog9' Hawley ]
+  * Flipping typos
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.18
+
+  [ John 'Warthog9' Hawley ]
+  * PLEASE FLIPPING DO GOOD
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.19
+
+  [ John 'Warthog9' Hawley ]
+  * are exports wrong?
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.20
+
+  [ John 'Warthog9' Hawley ]
+  * more
+  * fixing version passing with semver
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.21
+
+  [ John 'Warthog9' Hawley ]
+  * fix version
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.22
+
+  [ John 'Warthog9' Hawley ]
+  * shell scripts in shell scripts!
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.23
+
+  [ John 'Warthog9' Hawley ]
+  * 1 character changes will be the death of me today
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.24
+
+  [ John 'Warthog9' Hawley ]
+  * Seriously 1 character fixes
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.25
+  * Cargo Release 0.0.26
+
+  [ John 'Warthog9' Hawley ]
+  * just doing this to get it past for now
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.27
+  * Generating Ubuntu & Debian Changelog for 0.0.27-314
+
+  [ John 'Warthog9' Hawley ]
+  * adding names to the workflows
+  * Ok lets try our first release and see how this goes
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.28
+  * Generating Ubuntu & Debian Changelog for 0.0.28-5
+
+  [ John 'Warthog9' Hawley ]
+  * Ok lets try specifying the version more explicitly
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.29
+  * Generating Ubuntu & Debian Changelog for 0.0.29-4
+
+  [ John 'Warthog9' Hawley ]
+  * Moving to the right dependency
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.30
+  * Generating Ubuntu & Debian Changelog for 0.0.30-4
+
+  [ John 'Warthog9' Hawley ]
+  * find!
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.0.31
+
+ -- Tenstorrent Releases <releases@tenstorrent.com>  Wed, 02 Jul 2025 16:55:25 +0000
+
 rust-luwen (0.0.30) noble; urgency=medium
 
   [ John 'Warthog9' Hawley ]
