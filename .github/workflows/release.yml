@@ -235,6 +235,7 @@ jobs:
       - versionchange
       - changelogs
       - tagrelease
+      - buildall
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -281,6 +282,7 @@ jobs:
   publish-pypi:
     needs:
       - buildall
+      - generaterelease
       - publish-to-testpypi
     uses: ./.github/workflows/release-pypi.yml
     secrets: inherit
@@ -292,6 +294,7 @@ jobs:
     name: Publish Python 🐍 distribution 📦 to TestPyPI
     needs:
       - buildall
+      - generaterelease
     runs-on: ubuntu-latest
 
     environment:
