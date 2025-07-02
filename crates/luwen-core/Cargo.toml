@@ -1,6 +1,6 @@
 [package]
 name = "luwen-core"
-version = "0.0.31"
+version = "0.0.32"
 description = "Common dependencies shared by all crates based on luwen"
 edition = "2021"
 license = "Apache-2.0"
