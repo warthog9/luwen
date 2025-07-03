@@ -246,7 +246,7 @@ jobs:
       - run: echo ${{ needs.versionchange.outputs.git_hash }}
       - uses: actions/checkout@v4
         with:
-          ref: ${{ needs.changelog.outputs.git_hash }}
+          ref: ${{ needs.changelogs.outputs.git_hash }}
           fetch-tags: true
           fetch-depth: 0
       - run: git log --format="%H" -n 1
