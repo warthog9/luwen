@@ -8,6 +8,18 @@ on:
         default: ${{ github.ref }}
         required: false
         type: string
+      MAJOR:
+        required: false
+        type: string
+      MINOR:
+        required: false
+        type: string
+      PATCH:
+        required: false
+        type: string
+      NUMBER_OF_COMMITS_SINCE_TAG:
+        required: false
+        type: string
   #push:
   #  tags: [ 'v*' ]
 
@@ -46,6 +58,27 @@ jobs:
       - name: Extract version from tag
         uses: damienaicheh/extract-version-from-tag-action@v1.3.0
       - run: git tag
+      - name: Ok Figure out version
+        run: |
+          if [[ ! -n "${{ inputs.MAJOR }}" ]]
+          then
+            echo "MAJOR=${{ inputs.MAJOR }}" >> $GITHUB_ENV
+          fi
+
+          if [[ ! -n "${{ inputs.MINOR }}" ]]
+          then
+            echo "MINOR=${{ inputs.MINOR }}" >> $GITHUB_ENV
+          fi
+
+          if [[ ! -n "${{ inputs.PATCH }}" ]]
+          then
+            echo "PATCH=${{ inputs.PATCH }}" >> $GITHUB_ENV
+          fi
+
+          if [[ ! -n "${{ inputs.MAJOR }}" ]]
+          then
+            echo "NUMBER_OF_COMMITS_SINCE_TAG=${{ inputs.NUMBER_OF_COMMITS_SINCE_TAG }}" >> $GITHUB_ENV
+          fi
       #- run: |
       #    if [[ "main" = "${{ github.ref_name }}" ]]; \
       #    then \

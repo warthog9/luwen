@@ -8,6 +8,18 @@ on:
         default: ${{ github.ref }}
         required: false
         type: string
+      MAJOR:
+        required: false
+        type: string
+      MINOR:
+        required: false
+        type: string
+      PATCH:
+        required: false
+        type: string
+      NUMBER_OF_COMMITS_SINCE_TAG:
+        required: false
+        type: string
 
   #push:
   #  tags: [ 'v*' ]
@@ -29,6 +41,10 @@ jobs:
     uses: ./.github/workflows/build-deb-ubuntu-22.04.yml
     with:
       ref: ${{ inputs.ref }}
+      MAJOR:  ${{ inputs.MAJOR }}
+      MINOR:  ${{ inputs.MINOR }}
+      PATCH:  ${{ inputs.PATCH }}
+      NUMBER_OF_COMMITS_SINCE_TAG:  ${{ inputs.NUMBER_OF_COMMITS_SINCE_TAG }}
     secrets: inherit
   builddeb2404:
     needs:
@@ -36,6 +52,10 @@ jobs:
     uses: ./.github/workflows/build-deb-ubuntu-24.04.yml
     with:
       ref: ${{ inputs.ref }}
+      MAJOR:  ${{ inputs.MAJOR }}
+      MINOR:  ${{ inputs.MINOR }}
+      PATCH:  ${{ inputs.PATCH }}
+      NUMBER_OF_COMMITS_SINCE_TAG:  ${{ inputs.NUMBER_OF_COMMITS_SINCE_TAG }}
     secrets: inherit
   buildpypi:
     needs:
