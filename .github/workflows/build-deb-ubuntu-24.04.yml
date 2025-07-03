@@ -80,7 +80,7 @@ jobs:
         run: ln -s debian.ubuntu debian
       - run: |
           gbp dch \
-            --debian-branch ${{ github.ref_name }} \
+            --debian-branch ${{ inputs.ref }} \
             -R \
             -N ${MAJOR}.${MINOR}.${PATCH} \
             --spawn-editor=never
