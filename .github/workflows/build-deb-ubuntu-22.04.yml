@@ -39,7 +39,7 @@ jobs:
       - run: sudo ln -s /usr/local/bin/maturin /usr/bin/
       - uses: actions/checkout@v4
         with:
-          ref: ${{ needs.changelog.outputs.git_hash }}
+          ref: ${{ github.event.ref }}
           fetch-tags: true
           fetch-depth: 0
       - name: Extract version from tag

@@ -20,7 +20,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
       with:
-        ref: ${{ needs.changelog.outputs.git_hash }}
+        ref: ${{ github.event.ref }}
         fetch-tags: true
         fetch-depth: 0
     - name: Set up Python ${{ matrix.python-version }}
@@ -63,7 +63,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
       with:
-        ref: ${{ needs.changelog.outputs.git_hash }}
+        ref: ${{ github.event.ref }}
         fetch-tags: true
         fetch-depth: 0
     - name: Set up Python 3.11
