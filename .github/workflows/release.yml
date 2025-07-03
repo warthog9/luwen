@@ -355,7 +355,7 @@ jobs:
       - name: Merge back
         run: |
           git rebase origin/${{ needs.tempbranch.outputs.rc_ref }}
-          git push --delete ${{ needs.tempbranch.outputs.rc_ref }}
+          git push origin --delete ${{ needs.tempbranch.outputs.rc_ref }}
 
   ###
   # Publish PyPi
