@@ -60,24 +60,28 @@ jobs:
       - run: git tag
       - name: Ok Figure out version
         run: |
-          if [[ ! -n "${{ inputs.MAJOR }}" ]]
+          if [[ -n "${{ inputs.MAJOR }}" ]]
           then
             echo "MAJOR=${{ inputs.MAJOR }}" >> $GITHUB_ENV
+            echo "MAJOR=${{ inputs.MAJOR }}"
           fi
 
-          if [[ ! -n "${{ inputs.MINOR }}" ]]
+          if [[ -n "${{ inputs.MINOR }}" ]]
           then
             echo "MINOR=${{ inputs.MINOR }}" >> $GITHUB_ENV
+            echo "MINOR=${{ inputs.MINOR }}"
           fi
 
-          if [[ ! -n "${{ inputs.PATCH }}" ]]
+          if [[ -n "${{ inputs.PATCH }}" ]]
           then
             echo "PATCH=${{ inputs.PATCH }}" >> $GITHUB_ENV
+            echo "PATCH=${{ inputs.PATCH }}"
           fi
 
-          if [[ ! -n "${{ inputs.MAJOR }}" ]]
+          if [[ -n "${{ inputs.MAJOR }}" ]]
           then
             echo "NUMBER_OF_COMMITS_SINCE_TAG=${{ inputs.NUMBER_OF_COMMITS_SINCE_TAG }}" >> $GITHUB_ENV
+            echo "NUMBER_OF_COMMITS_SINCE_TAG=${{ inputs.NUMBER_OF_COMMITS_SINCE_TAG }}"
           fi
       #- run: |
       #    if [[ "main" = "${{ github.ref_name }}" ]]; \
