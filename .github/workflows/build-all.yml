@@ -5,6 +5,7 @@ on:
   workflow_call:
     inputs:
       ref:
+        default: ${{ github.ref }}
         required: false
         type: string
 
@@ -20,26 +21,26 @@ jobs:
       - run: |
           echo "What started this ref: ${{ github.ref }}"
           echo "What started this sha: ${{ github.sha }}"
-          echo "Did we get a ref pass in? ${{ github.event.ref }}"
+          echo "Did we get a ref pass in? ${{ inputs.ref }}"
   builddeb2204:
     needs:
       - buildall
     name: Build Ubuntu 22.04
     uses: ./.github/workflows/build-deb-ubuntu-22.04.yml
     with:
-      ref: ${{ github.event.ref }}"
+      ref: ${{ inputs.ref }}"
     secrets: inherit
   builddeb2404:
     needs:
       - buildall
     uses: ./.github/workflows/build-deb-ubuntu-24.04.yml
     with:
-      ref: ${{ github.event.ref }}"
+      ref: ${{ inputs.ref }}"
     secrets: inherit
   buildpypi:
     needs:
       - buildall
     uses: ./.github/workflows/build-pypi.yml
     with:
-      ref: ${{ github.event.ref }}"
+      ref: ${{ inputs.ref }}"
     secrets: inherit

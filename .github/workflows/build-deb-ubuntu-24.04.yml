@@ -5,6 +5,7 @@ on:
   workflow_call:
     inputs:
       ref:
+        default: ${{ github.ref }}
         required: false
         type: string
   #push:
@@ -38,7 +39,7 @@ jobs:
       - run: gpg --list-secret-keys
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.ref }}
+          ref: ${{ inputs.ref }}
           fetch-tags: true
           fetch-depth: 0
       - name: Extract version from tag

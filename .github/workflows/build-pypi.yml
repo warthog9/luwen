@@ -5,6 +5,7 @@ on:
   workflow_call:
     inputs:
       ref:
+        default: ${{ github.ref }}
         required: false
         type: string
 
@@ -20,7 +21,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
       with:
-        ref: ${{ github.event.ref }}
+        ref: ${{ inputs.ref }}
         fetch-tags: true
         fetch-depth: 0
     - name: Set up Python ${{ matrix.python-version }}
@@ -63,7 +64,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
       with:
-        ref: ${{ github.event.ref }}
+        ref: ${{ inputs.ref }}
         fetch-tags: true
         fetch-depth: 0
     - name: Set up Python 3.11
