@@ -216,6 +216,7 @@ jobs:
   ###
   buildall:
     needs:
+      - tempbranch
       - versionchange
       - changelogs
       - tagrelease
