@@ -3,6 +3,10 @@ run-name: Build Release debian package - Ubuntu 22.04
 on:
   workflow_dispatch:
   workflow_call:
+    inputs:
+      ref:
+        required: false
+        type: string
   #push:
   #  tags: [ 'v*' ]
 
@@ -35,6 +39,7 @@ jobs:
       - run: sudo ln -s /usr/local/bin/maturin /usr/bin/
       - uses: actions/checkout@v4
         with:
+          ref: ${{ needs.changelog.outputs.git_hash }}
           fetch-tags: true
           fetch-depth: 0
       - name: Extract version from tag

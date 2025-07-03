@@ -3,6 +3,10 @@ name: Build 🐍 📦 wheels
 on:
   workflow_dispatch:
   workflow_call:
+    inputs:
+      ref:
+        required: false
+        type: string
 
 jobs:
   # Build non-abi3 wheels for Python 3.8-3.10
@@ -16,6 +20,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
       with:
+        ref: ${{ needs.changelog.outputs.git_hash }}
         fetch-tags: true
         fetch-depth: 0
     - name: Set up Python ${{ matrix.python-version }}
@@ -58,6 +63,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
       with:
+        ref: ${{ needs.changelog.outputs.git_hash }}
         fetch-tags: true
         fetch-depth: 0
     - name: Set up Python 3.11

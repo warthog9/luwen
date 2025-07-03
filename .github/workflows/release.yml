@@ -122,6 +122,7 @@ jobs:
   ###
   changelogs:
     needs:
+      - tempbranch
       - versionchange
     runs-on: ubuntu-latest
     permissions:
@@ -147,9 +148,9 @@ jobs:
             git-buildpackage
       - uses: actions/checkout@v4
         with:
-          ref: ${{ needs.tempbranch.outputs.rc_ref }}
           fetch-tags: true
           fetch-depth: 0
+          ref: ${{ needs.tempbranch.outputs.rc_ref }}
       # Ok checkout doesn't do what I want it to do in the way it does it *sigh*
       # so we need to snag a pull to catch up from where it started
       #- run: git pull
