@@ -121,12 +121,12 @@ jobs:
             git-buildpackage
       - uses: actions/checkout@v4
         with:
-          #ref: ${{ needs.versionchange.outputs.git_hash }}
+          ref: ${{ needs.versionchange.outputs.git_hash }}
           fetch-tags: true
           fetch-depth: 0
       # Ok checkout doesn't do what I want it to do in the way it does it *sigh*
       # so we need to snag a pull to catch up from where it started
-      - run: git pull
+      #- run: git pull
       - run: git log --format="%H" -n 1
       #- name: Extract version from tag
       #  uses: damienaicheh/extract-version-from-tag-action@v1.3.0
@@ -192,6 +192,8 @@ jobs:
       - changelogs
       - tagrelease
     uses: ./.github/workflows/build-all.yml
+    with:
+      ref: ${{ needs.changelogs.outputs.git_hash }}
     secrets: inherit
 
   ###
@@ -264,7 +266,15 @@ jobs:
             }
 
       - name: FIND!
-        run: find ${GITHUB_WORKSPACE}
+        run: find ${GITHUB_WORKSPACE} -type f
+
+      - name: Deb file renames so they don't overlap
+        run: |
+          for x in $( find ${GITHUB_WORKSPACE} -type f -iname \*.deb | grep -v "artifacts-ubuntu" )
+          do
+            want=$( echo "${x}" | xargs dirname | tr "/" "\n" | tail -n 1 )"
+            mv -v "${x}" "$( echo "${x}" | xargs dirname )/${want} )"
+          done
 
       - name: Create Release
         id: create_release

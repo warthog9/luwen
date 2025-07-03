@@ -13,12 +13,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Hello World"
+      - run: |
+          echo "What started this ref: ${{ github.ref }}"
+          echo "What started this sha: ${{ github.context.sha }}"
+          echo "Payload Ref... ${{ github.event.client_payload.ref }}"
   builddeb2204:
-      uses: ./.github/workflows/build-deb-ubuntu-22.04.yml
-      secrets: inherit
+    needs:
+      - buildall
+    name: Build Ubuntu 22.04
+    uses: ./.github/workflows/build-deb-ubuntu-22.04.yml
+    with:
+      ref: ${{ github.event.client_payload.ref }}
+    secrets: inherit
   builddeb2404:
-      uses: ./.github/workflows/build-deb-ubuntu-24.04.yml
-      secrets: inherit
+    needs:
+      - buildall
+    uses: ./.github/workflows/build-deb-ubuntu-24.04.yml
+    with:
+      ref: ${{ github.event.client_payload.ref }}
+    secrets: inherit
   buildpypi:
-      uses: ./.github/workflows/build-pypi.yml
-      secrets: inherit
+    needs:
+      - buildall
+    uses: ./.github/workflows/build-pypi.yml
+    with:
+      ref: ${{ github.event.client_payload.ref }}
+    secrets: inherit
