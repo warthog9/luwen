@@ -354,7 +354,7 @@ jobs:
           fetch-depth: 0
       - name: Merge back
         run: |
-          git merge --no-commit ${{ needs.tempbranch.outputs.rc_ref }}
+          git rebase ${{ needs.tempbranch.outputs.rc_ref }}
           git push --delete ${{ needs.tempbranch.outputs.rc_ref }}
 
   ###
