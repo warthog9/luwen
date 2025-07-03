@@ -356,6 +356,7 @@ jobs:
         run: |
           git log -3
           git rebase origin/${{ needs.tempbranch.outputs.rc_ref }}
+          git pull --rebase
           git log -3
           git push
           git push origin --delete ${{ needs.tempbranch.outputs.rc_ref }}
