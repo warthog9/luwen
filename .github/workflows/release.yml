@@ -312,7 +312,7 @@ jobs:
               )"
             mv -v \
               "${x}" \
-              "$( echo "${x}" | xargs dirname )/${want} )"
+              "$( echo "${x}" | xargs dirname )/${want}"
           done
 
       - name: Create Release
