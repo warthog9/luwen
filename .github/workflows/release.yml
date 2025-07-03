@@ -24,7 +24,32 @@ jobs:
   #   come back and allow other things to happen.  Or I suppose I snag the sha from versionchange
   #   and pass it along as "latest" in the series, could work too and bypass some of this?
   ###
+  tempbranch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      rc_ref: ${{ steps.rc_ref.outputs.rc_ref }}
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+          fetch-depth: 0
+      - name: Figure out branch name
+        id: rc_ref
+        run: |
+          export rc_ref="rc_ref=rc-temp-$( git rev-parse --short HEAD )-$( date +%Y.%m.%d-%H.%M.%S )"
+          echo "${rc_ref}"
+          echo "${rc_ref}" >> "$GITHUB_OUTPUT"
+      - name: Do up the branch quick
+        run: git checkout -b "${{ steps.rc_ref.outputs.rc_ref }}"
+      - name: Push the branch to work from
+        run: git push --branches
+
   versionchange:
+    needs:
+      - tempbranch
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -46,6 +71,7 @@ jobs:
         with:
           fetch-tags: true
           fetch-depth: 0
+          ref: ${{ needs.tempbranch.outputs.rc_ref }}
       - name: Git e-mail
         run: git config --global user.email "${EMAIL}"
       - name: Git name
@@ -121,7 +147,7 @@ jobs:
             git-buildpackage
       - uses: actions/checkout@v4
         with:
-          ref: ${{ needs.versionchange.outputs.git_hash }}
+          ref: ${{ needs.tempbranch.outputs.rc_ref }}
           fetch-tags: true
           fetch-depth: 0
       # Ok checkout doesn't do what I want it to do in the way it does it *sigh*
@@ -193,7 +219,7 @@ jobs:
       - tagrelease
     uses: ./.github/workflows/build-all.yml
     with:
-      ref: ${{ needs.changelogs.outputs.git_hash }}
+      ref: ${{ needs.tempbranch.outputs.rc_ref }}
     secrets: inherit
 
   ###

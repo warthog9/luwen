@@ -16,7 +16,7 @@ jobs:
       - run: |
           echo "What started this ref: ${{ github.ref }}"
           echo "What started this sha: ${{ github.sha }}"
-          echo "What started this sha: ${{ github.context.sha }}"
+          echo "Did we get a ref pass in? ${{ github.event.ref }}"
   builddeb2204:
     needs:
       - buildall
