@@ -169,7 +169,7 @@ jobs:
           echo "Patch: ${PATCH}"
           echo "Num Patch: ${NUMBER_OF_COMMITS_SINCE_TAG}"
           gbp dch \
-            --debian-branch ${{ github.ref_name }} \
+            --debian-branch ${{ needs.tempbranch.outputs.rc_ref }} \
             -R \
             -N ${MAJOR}.${MINOR}.${PATCH} \
             --spawn-editor=never
@@ -183,7 +183,7 @@ jobs:
       - name: Generate Debian Changelog
         run: |
           gbp dch \
-            --debian-branch ${{ github.ref_name }} \
+            --debian-branch ${{ needs.tempbranch.outputs.rc_ref }} \
             -R \
             N ${MAJOR}.${MINOR}.${PATCH} \
             --spawn-editor=never
