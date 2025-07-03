@@ -85,7 +85,7 @@ jobs:
           echo "luwen_version=${luwen_ver}"
           echo "luwen_version=${luwen_ver}" >> "$GITHUB_OUTPUT"
       - name: Bump the version
-        run: cargo ws version patch --allow-branch main --no-git-tag --message "Cargo Release %v" -y
+        run: cargo ws version patch --allow-branch ${{ needs.tempbranch.outputs.rc_ref }} --no-git-tag --message "Cargo Release %v" -y
       - name: What NEW Version?
         id: new-luwen-version
         run: |
