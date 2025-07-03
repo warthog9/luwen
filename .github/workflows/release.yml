@@ -317,13 +317,16 @@ jobs:
               "$( echo "${x}" | xargs dirname )/${want}"
           done
 
+      - name: Find the deb & whl files
+        run: find ${GITHUB_WORKSPACE} -type f -iname \*.deb -o -iname \*.whl -exec ls -lah {} \;
+
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ needs.versionchange.outputs.luwen_version_new }}
           files: |
-            ${{ github.workspace }}/*/python3-pyluwen_*.deb
+            ${{ github.workspace }}/python3-pyluwen_*/*.deb
             ${{ github.workspace }}/python-package-*/*.whl
           body: ${{ steps.build_changelog.outputs.changelog }}
           draft: false
