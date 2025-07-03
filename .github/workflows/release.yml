@@ -50,7 +50,10 @@ jobs:
   versionchange:
     needs:
       - tempbranch
-    runs-on: ubuntu-latest
+    # Runs on needs to be the oldest we can make it
+    # just to make sure that the cargo is the oldest
+    # we likely need to support
+    runs-on: ubuntu-22.04
     permissions:
       contents: write
     outputs:
@@ -104,6 +107,13 @@ jobs:
           echo "${num_commits_since}"
           echo "${num_commits_since}" >> "$GITHUB_OUTPUT"
       - run: echo ${{ steps.luwenver.outputs.luwen_version }}
+      - name: Update Cargo.lock
+        run: |
+          cargo update
+          git commit \
+            Cargo.lock \
+            -m "Cargo.lock: updating for ${{ steps.luwenver.outputs.luwen_version }}"
+          git push
       - name: Find New Git Hash
         id: new-git-hash
         run: |
@@ -115,7 +125,6 @@ jobs:
     env:
       EMAIL: releases@tenstorrent.com
       NAME: Tenstorrent Releases
-
 
   ###
   # Change Logs Generation
