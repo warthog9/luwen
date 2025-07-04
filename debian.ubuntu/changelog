@@ -1,3 +1,20 @@
+rust-luwen (0.7.8) noble; urgency=medium
+
+  [ John 'Warthog9' Hawley ]
+  * Add debian.ubuntu
+  * debian.debian: bringing things more up to date with Ubuntu
+  * Adding Build All wrapper
+  * Workflow: build deb - Ubuntu 22.04
+  * Workflow: build deb - Ubuntu 24.04
+  * Workflow: add build PyPi
+  * Workflow: add Release workflow
+
+  [ Tenstorrent Releases ]
+  * Cargo Release 0.7.8
+  * Cargo.lock: updating for 0.7.5
+
+ -- Tenstorrent Releases <releases@tenstorrent.com>  Fri, 04 Jul 2025 04:04:20 +0000
+
 rust-luwen (0.0.1) unstable; urgency=low
   [ Evangelos Ribeiro Tzaras ]
   * [f6d90d5] docs: gbp-clone: testing
