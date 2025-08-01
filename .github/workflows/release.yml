@@ -373,65 +373,65 @@ jobs:
           git push
           git push origin --delete ${{ needs.tempbranch.outputs.rc_ref }}
 
-  ###
-  # Publish TEST PyPi
-  ###
-  publish-to-testpypi:
-    name: Publish Python 🐍 distribution 📦 to TestPyPI
-    needs:
-      - build_all_depends
-      - generaterelease
-    runs-on: ubuntu-latest
-
-    environment:
-      name: pypi-release
-      url: https://test.pypi.org/p/pyluwen
-
-    permissions:
-      id-token: write  # IMPORTANT: mandatory for trusted publishing
-
-    steps:
-      - name: Download all the dists
-        uses: actions/download-artifact@v4
-        with:
-          pattern: python-package-*
-          path: dist/
-          merge-multiple: true
-      - name: Publish distribution 📦 to TestPyPI
-        #run: echo "Hi!"
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          repository-url: https://test.pypi.org/legacy/
-          verbose: true
-
-  ###
-  # Publish PyPi
-  ###
-  publish-pypi:
-    needs:
-      - build_all_depends
-      - generaterelease
-      - publish-to-testpypi
-    runs-on: ubuntu-latest
-    name: >-
-      Publish Python 🐍 distribution 📦 to PyPI
-    #if: startsWith(github.ref, 'refs/tags/')  # only publish to PyPI on tag pushes
-    environment:
-      name: pypi
-      url: https://pypi.org/p/pyluwen
-    permissions:
-      id-token: write  # IMPORTANT: mandatory for trusted publishing
-
-    steps:
-    - name: Download all the dists
-      uses: actions/download-artifact@v4
-      with:
-        pattern: python-package-*
-        path: dist/
-        merge-multiple: true
-    - name: Publish distribution 📦 to PyPI
-      #run: echo "Hi!"
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        verbose: true
-
+#  ###
+#  # Publish TEST PyPi
+#  ###
+#  publish-to-testpypi:
+#    name: Publish Python 🐍 distribution 📦 to TestPyPI
+#    needs:
+#      - build_all_depends
+#      - generaterelease
+#    runs-on: ubuntu-latest
+#
+#    environment:
+#      name: pypi-release
+#      url: https://test.pypi.org/p/pyluwen
+#
+#    permissions:
+#      id-token: write  # IMPORTANT: mandatory for trusted publishing
+#
+#    steps:
+#      - name: Download all the dists
+#        uses: actions/download-artifact@v4
+#        with:
+#          pattern: python-package-*
+#          path: dist/
+#          merge-multiple: true
+#      - name: Publish distribution 📦 to TestPyPI
+#        #run: echo "Hi!"
+#        uses: pypa/gh-action-pypi-publish@release/v1
+#        with:
+#          repository-url: https://test.pypi.org/legacy/
+#          verbose: true
+#
+#  ###
+#  # Publish PyPi
+#  ###
+#  publish-pypi:
+#    needs:
+#      - build_all_depends
+#      - generaterelease
+#      - publish-to-testpypi
+#    runs-on: ubuntu-latest
+#    name: >-
+#      Publish Python 🐍 distribution 📦 to PyPI
+#    #if: startsWith(github.ref, 'refs/tags/')  # only publish to PyPI on tag pushes
+#    environment:
+#      name: pypi
+#      url: https://pypi.org/p/pyluwen
+#    permissions:
+#      id-token: write  # IMPORTANT: mandatory for trusted publishing
+#
+#    steps:
+#    - name: Download all the dists
+#      uses: actions/download-artifact@v4
+#      with:
+#        pattern: python-package-*
+#        path: dist/
+#        merge-multiple: true
+#    - name: Publish distribution 📦 to PyPI
+#      #run: echo "Hi!"
+#      uses: pypa/gh-action-pypi-publish@release/v1
+#      with:
+#        verbose: true
+#
