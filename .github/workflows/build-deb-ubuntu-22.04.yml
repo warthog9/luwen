@@ -24,7 +24,9 @@ on:
 jobs:
   builddeb2204:
     name: Build Release debian package - Ubuntu 22.04
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:22.04
     steps:
       - run: |
           echo "What started this ref: ${{ github.ref }}"
