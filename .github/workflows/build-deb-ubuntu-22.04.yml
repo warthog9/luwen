@@ -51,6 +51,7 @@ jobs:
             debhelper \
             dh-python \
             dh-sequence-python3 \
+            git \
             git-buildpackage \
             gnupg \
             libpython3-all-dev \
