@@ -41,7 +41,7 @@ jobs:
             echo "ref_name=${{ inputs.ref }}"
             echo "ref_name=${{ inputs.ref }}" >> $GITHUB_ENV
           fi
-      - run: sudo apt update
+      #- run: sudo apt update
       - run: |
           sudo apt install -y \
             build-essential \
