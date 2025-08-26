@@ -142,15 +142,15 @@ jobs:
         env:
           EMAIL: releases@tenstorrent.com
           NAME: Tenstorrent Releases
-      - run: |
-          echo "---"
-          ls -lah /home/runner/work/luwen/luwen/crates/pyluwen/vendor/
-          echo "---"
-          ls -lah /home/runner/work/luwen/luwen/crates/pyluwen/vendor/thiserror-1.0.69/
-          echo "---"
-          ls -lah /home/runner/work/luwen/luwen/crates/pyluwen/vendor/thiserror-1.0.69/Cargo.toml.orig
-          echo "---"
-          cat /home/runner/work/luwen/luwen/crates/pyluwen/vendor/thiserror-1.0.69/Cargo.toml.orig
+#      - run: |
+#          echo "---"
+#          ls -lah /home/runner/work/luwen/luwen/crates/pyluwen/vendor/
+#          echo "---"
+#          ls -lah /home/runner/work/luwen/luwen/crates/pyluwen/vendor/thiserror-1.0.69/
+#          echo "---"
+#          ls -lah /home/runner/work/luwen/luwen/crates/pyluwen/vendor/thiserror-1.0.69/Cargo.toml.orig
+#          echo "---"
+#          cat /home/runner/work/luwen/luwen/crates/pyluwen/vendor/thiserror-1.0.69/Cargo.toml.orig
       - run: |
           sudo gbp buildpackage \
             --git-ignore-new
