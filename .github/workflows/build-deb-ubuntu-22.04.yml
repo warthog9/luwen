@@ -67,8 +67,8 @@ jobs:
           gpg_private_key: ${{ secrets.PKG_SIGNING_KEY_DEB }}
       - run: gpg --list-keys
       - run: gpg --list-secret-keys
-      - run: sudo pip install --upgrade pip && sudo pip install maturin
-      - run: sudo ln -s /usr/local/bin/maturin /usr/bin/
+      - run: pip install --upgrade pip && pip install maturin
+      - run: ln -s /usr/local/bin/maturin /usr/bin/
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
@@ -158,9 +158,9 @@ jobs:
           echo "---"
           ls -lah
           echo "---"
-          git log --pretty=format:'%h' -n 1
+          git log --pretty=format:'%h\n' -n 1
           echo "---"
-          sudo gbp buildpackage \
+          gbp buildpackage \
             --git-ignore-new
             #--git-upstream-tag='v%(version)s'
             # --git-tag
