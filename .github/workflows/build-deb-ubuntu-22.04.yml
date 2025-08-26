@@ -44,9 +44,6 @@ jobs:
             echo "ref_name=${{ inputs.ref }}" >> $GITHUB_ENV
           fi
       - run: apt update
-      - run: apt install timedatectl
-      - name: Set TZ
-        run: timedatectl set-timezone UTC
       - run: |
           apt install -y \
             build-essential \
@@ -60,6 +57,8 @@ jobs:
             protobuf-compiler \
             pybuild-plugin-pyproject \
             python3-pip
+        env:
+          TZ: UTC
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v6
         with:
