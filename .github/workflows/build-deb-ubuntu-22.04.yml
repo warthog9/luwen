@@ -136,6 +136,8 @@ jobs:
           EMAIL: releases@tenstorrent.com
           NAME: Tenstorrent Releases
       - run: |
+          ls -lah /home/runner/work/luwen/luwen/crates/pyluwen/vendor/
+          ls -lah /home/runner/work/luwen/luwen/crates/pyluwen/vendor/thiserror-1.0.69/
           gbp buildpackage \
             --git-ignore-new
             #--git-upstream-tag='v%(version)s'
