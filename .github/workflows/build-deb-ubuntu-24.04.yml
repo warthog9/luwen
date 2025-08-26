@@ -43,9 +43,9 @@ jobs:
             echo "ref_name=${{ inputs.ref }}"
             echo "ref_name=${{ inputs.ref }}" >> $GITHUB_ENV
           fi
-      - run: sudo apt update
+      - run: apt update
       - run: |
-          sudo apt install -y \
+          apt install -y \
             build-essential \
             cargo \
             debhelper \
@@ -69,6 +69,8 @@ jobs:
           ref: ${{ inputs.ref }}
           fetch-tags: true
           fetch-depth: 0
+      - name: Mucking about with users
+        run: git config --global --add safe.directory /__w/luwen/luwen
       - name: Extract version from tag
         uses: damienaicheh/extract-version-from-tag-action@v1.3.0
       - run: git tag
@@ -150,6 +152,7 @@ jobs:
         run: cp debian/changelog artifacts/changelog
       - name: Set environment variable for distro
         id: distro_ident
+        shell: bash
         run: |
           source /etc/os-release && \
           echo "DISTRO_IDENT=$( echo \"${NAME}\" | sed 's/"//g' | tr '[:upper:]' '[:lower:]' )-${VERSION_ID}" \
