@@ -142,6 +142,7 @@ jobs:
           EMAIL: releases@tenstorrent.com
           NAME: Tenstorrent Releases
       - run: |
+          ls -lah
           gbp buildpackage \
             --git-ignore-new
             #--git-upstream-tag='v%(version)s'
