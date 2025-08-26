@@ -145,7 +145,7 @@ jobs:
           echo "---"
           cat /home/runner/work/luwen/luwen/crates/pyluwen/vendor/thiserror-1.0.69/Cargo.toml.orig
       - run: |
-          gbp buildpackage \
+          sudo gbp buildpackage \
             --git-ignore-new
             #--git-upstream-tag='v%(version)s'
             # --git-tag
