@@ -61,7 +61,7 @@ jobs:
           gpg_private_key: ${{ secrets.PKG_SIGNING_KEY_DEB }}
       - run: gpg --list-keys
       - run: gpg --list-secret-keys
-      - run: sudo pip install --upgrade pip && sudo pip install maturin
+      - run: sudo pip install --upgrade pip && sudo pip install maturin==1.9.2
       - run: sudo ln -s /usr/local/bin/maturin /usr/bin/
       - uses: actions/checkout@v4
         with:
