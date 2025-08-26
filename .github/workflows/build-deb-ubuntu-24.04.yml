@@ -33,6 +33,8 @@ jobs:
           echo "What started this ref: ${{ github.ref_name }}"
           echo "What started this sha: ${{ github.sha }}"
           echo "Did we get a ref pass in? ${{ inputs.ref }}"
+      - name: Set TZ
+        run: timedatectl set-timezone UTC
       - name: Figure out branch name
         id: ref_name
         run: |
