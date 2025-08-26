@@ -43,6 +43,10 @@ jobs:
             echo "ref_name=${{ inputs.ref }}"
             echo "ref_name=${{ inputs.ref }}" >> $GITHUB_ENV
           fi
+      - name: Fix TZ
+        run: |
+          echo "UTC" > /etc/timezone 
+          dpkg-reconfigure -f noninteractive tzdata
       - run: apt update
       - run: |
           apt install -y \
