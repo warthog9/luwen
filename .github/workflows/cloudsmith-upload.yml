@@ -1,0 +1,70 @@
+name: Cloudsmith - Push Debs
+run-name: Cloudsmith - Push Debs
+on:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      ref:
+        default: ${{ github.ref }}
+        required: false
+        type: string
+      MAJOR:
+        required: false
+        type: string
+      MINOR:
+        required: false
+        type: string
+      PATCH:
+        required: false
+        type: string
+      NUMBER_OF_COMMITS_SINCE_TAG:
+        required: false
+        type: string
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    name: Debs Push
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu
+        ver_name:
+          - noble # 24.04
+          - jammy # 22.04
+        include:
+          - ver_name: noble
+            os: ubuntu
+          - ver: 24.04
+            ver_name: noble
+          - ver_name: jammy
+            os: ubuntu
+          - ver: 22.04
+            ver_name: jammy
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+
+      - uses: robinraju/release-downloader@v1
+        with:
+          latest: true
+          fileName: '*'
+
+      - name: find what's there
+        run: find
+
+      - name: Push
+        id: push
+        uses: cloudsmith-io/action@master
+        with:
+          api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
+          command: "push"
+          format: "deb"
+          owner: "tenstorrent"
+          repo: "tenstorrent"
+          distro: "ubuntu"
+          release: "${{ matrix.ver_name }}" #22: jammy | 24: noble
+          republish: "true" # needed ONLY if version is not changing
+          file: "*-${{ matrix.os }}-${{ matrix.ver }}.deb"
