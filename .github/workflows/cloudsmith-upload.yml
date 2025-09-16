@@ -1,0 +1,47 @@
+name: Cloudsmith - Push Debian
+run-name: Cloudsmith - Push Debian
+on:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      ref:
+        default: ${{ github.ref }}
+        required: false
+        type: string
+      MAJOR:
+        required: false
+        type: string
+      MINOR:
+        required: false
+        type: string
+      PATCH:
+        required: false
+        type: string
+      NUMBER_OF_COMMITS_SINCE_TAG:
+        required: false
+        type: string
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    name: Debian Push
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+
+      - name: find what's there
+        run: find
+
+      #- name: Push
+      #  id: push
+      #  uses: cloudsmith-io/action@master
+      #  with:
+      #    api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
+      #    command: "push"
+      #    format: "deb"
+      #    owner: "tenstorrent"
+      #    repo: "luwen"
+      #    distro: "ubuntu"
+      #    release: "noble" #22: jammy | 24: noble
+      #    republish: "true" # needed ONLY if version is not changing
+      #    file: "test/fixture/cloudsmith-debian-example_1.0.0_amd64.deb"
